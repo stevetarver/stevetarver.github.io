@@ -59,6 +59,25 @@ figcaption {
 }
 
 
+/**
+ * Tables
+ */
+table{
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #000000;
+    margin: 10px 0px 25px 0px;
+}
+
+th{
+    border:1px solid #000000;
+}
+
+td{
+    border:1px solid #000000;
+    padding: 0px 5px 0px 5px;
+}
+
 
 /**
  * Lists

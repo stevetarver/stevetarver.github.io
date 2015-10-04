@@ -11,7 +11,8 @@
 }
 
 .site-title {
-    font-size: 26px;
+    font-size: 40px;
+    font-family: 'Cherry Cream Soda', cursive;
     line-height: 56px;
     letter-spacing: -1px;
     margin-bottom: 0;
@@ -21,6 +22,14 @@
     &:visited {
         color: $grey-color-dark;
     }
+}
+
+.site-subtitle {
+    font-size: 12px;
+    font-family: 'Cherry Cream Soda', cursive;
+    line-height: 56px;
+    margin-left: 20px;
+    float: left;
 }
 
 .site-nav {
