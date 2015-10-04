@@ -1,0 +1,13 @@
+# Site settings
+title: Cloudy Mac
+email: your-email@domain.com
+description: > # A simple place to capture thoughts on current work
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://stevetarver.github.io"
+twitter_username: jekyllrb
+github_username:  jekyll
+
+# Build settings
+markdown: kramdown
+highlighter: pygments
+
