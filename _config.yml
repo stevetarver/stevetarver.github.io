@@ -1,14 +1,5 @@
-# Site settings
-title: Cloudy Mac
-subtitle: Cloud development from a mac perspective
-email: your-email@domain.com
-description: > # A simple place to capture thoughts on current work
-baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://stevetarver.github.io"
-github_username:  stevetarver
-
-
-# Build settings
-markdown: kramdown
+# General Jekyll Config
 highlighter: pygments
-
+url: http://example.com
+lsi: false
+exclude: [LICENSE, CNAME, README.md, .gitignore, Gemfile, Gemfile.lock]

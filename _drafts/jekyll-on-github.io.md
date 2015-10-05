@@ -123,3 +123,16 @@ _posts file naming convertion is YYYY-MM-DD.post name.md
 How to Displaying an index of posts: http://jekyllrb.com/docs/posts/
 
 You can evolve your site as the mood motivates
+
+Show your drafts with jekyll serve --drafts
+
+
+## Theme Directories
+
+the hardest part of changing themes is finding one you like. Here are some directories to look through:
+
+- [dr. jekyll's themes](https://drjekyllthemes.github.io)
+- [Jekyll Themes](*http://jekyllthemes.org)   
+- [Jekyll Themes & Templates](http://jekyllthemes.io)
+
+After that, download/clone the repo and selectively copy into your github.io repo.
