@@ -33,7 +33,7 @@ Why Grunt? Grunt, Gulp, whatever? I've used both and not found a compelling reas
 
 ## Where to start?
 
-I've written an example implementation at https://github.com/stevetarver/example-grunt-browserify-coffee-coverage that I will be pulling code snippets from. Clone it, follow the README and check out the facilities it provides. This article follows the README pretty closely - you could skip this article and just read the README.
+I've written an example implementation [here](https://github.com/stevetarver/example-grunt-browserify-coffee-coverage) that I will be pulling code snippets from. Clone it, follow the README and check out the facilities it provides. This article follows the README pretty closely - you could skip this article and just read the README.
 
 Developing the project went pretty much as follows
 
@@ -58,7 +58,7 @@ This Grunt task is a grunt-mocha fork with a small but powerful addition: the ab
 
 This Grunt task configuration runs the mocha tests in build/index.html and writes the lcov report to the coverage directory. This provides html for immediate code improvement and lcov.info to upload to CodeCov.io or Coveralls.io
 
-{% highlight coffeescript %}
+```CoffeeScript
 mocha:
   test:
     src: "build/index.html"
@@ -69,7 +69,7 @@ mocha:
       logErrors: true
       coverage:
         lcovReport: 'coverage/'
-{% endhighlight %}
+```
 
 It does not instrument the code so we will do that with...
 
@@ -91,11 +91,13 @@ The Browserify transform pipeline is normally given as an array of strings.
 
 Many transforms will take arguments and to accomodate this, grunt-browserify has a special syntax of:
 
-```[transformName, {arg1: 'value1', arg2: 'value2'}]```
+```CoffeeScript
+[transformName, {arg1: 'value1', arg2: 'value2'}]
+```
 
 Elements of the transform pipeline array may be either transform name, or the transform with args syntax above. More concretely:
 
-{% highlight coffeescript %}
+```CoffeeScript
 browserify:
   test:
     src:  "#{spec}/spec-main.coffee"
@@ -106,7 +108,7 @@ browserify:
         'jadify'
       ]
       debug: true
-{% endhighlight %}
+```
 
 ## Integrating with Travis, CodeCov, Coveralls, and David-dm
 
@@ -132,7 +134,7 @@ CodeCov.io has a pretty cool Chrome, FireFox, Opera extension that overlays cove
 
 Your basic .travis.yml looks like
 
-{% highlight yaml %}
+```yaml
 language: node_js
 node_js:
   - '0.12'
@@ -142,7 +144,7 @@ before_install:
 after_success:
   - 'npm run-script codecov'
   - 'npm run-script coveralls'
-{% endhighlight %}
+```
 
 Before Travis installs our package and builds it, we want grunt-cli installed globally so we can use it to run our build.
 
@@ -150,13 +152,13 @@ After our build completes successfully, we want to upload the coverage informati
 
 After those packages are installed, we can create scripts in our package.json to upload coverage.
 
-{% highlight json %}
+```json
 "scripts": {
   "test": "grunt",
   "codecov": "cat ./coverage/lcov.info | ./node_modules/.bin/codecov",
   "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
 },
-{% endhighlight %}
+```
 
 After these changes are made, our next push will trigger a build and upload to the coverage services. You can visit each site to see how the build went and examine their offerings.
 

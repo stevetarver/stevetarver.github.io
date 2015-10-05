@@ -32,14 +32,14 @@ Seems the most difficult task is choosing a package name. It needs to start with
 
 Creating the plugin boilerplate consists of:
 
-{% highlight bash %}
+```bash
 npm install -g grunt-init
 git clone git://github.com/gruntjs/grunt-init-gruntplugin.git ~/.grunt-init/gruntplugin
 mkdir grunt-excel-as-json
 cd grunt-excel-as-json
 grunt-init gruntplugin
 npm install
-{% endhighlight %}
+```
 
 The boilerplate provides a working task, test, package.json, and Gruntfile. You can run the default task and see the tests execute.
 
@@ -69,11 +69,11 @@ In the Gruntfile, on top of my task configuration, I found
 
 And then in the NodeUnit test I found
 
-{% highlight js %}
+```js
 var actual = grunt.file.read('tmp/default_options');
 var expected = grunt.file.read('test/expected/default_options');
 test.equal(actual, expected, 'should describe what the default behavior is.');
-{% endhighlight %}
+```
 
 The tests don't interact with my task code, they evaluate the results of my task.
 
@@ -94,7 +94,7 @@ grunt.registerMultiTask('convertExcelToJson', 'Convert Excel files to JSON files
 
 Beyond that, I needed a little help, so off to Grunt doc for creating tasks and file formats. Looks like the Files Array format satisfies requirements 1, 2, and 4. So the configuration would look like
 
-{% highlight js %}
+```js
 convertExcelToJson: {
   dist: {
     files: [
@@ -103,7 +103,7 @@ convertExcelToJson: {
     ]
   }
 },
-{% endhighlight %}
+```
 
 After creating the Excel test files, time for another test. Of course the first run didn't work.
 
@@ -114,9 +114,9 @@ Building the project with `grunt --stack` gets you to the failure point quickly.
 
 The heart of the task is iterating over the files collection:
 
-{% highlight js %}
+```js
 this.files.forEach(function(f) {
-{% endhighlight %}
+```
 
 Grunt has its own logging system, so I inserted some log statements to show what arguments were being passed. Turns out that the source files are always passed as an array, even if there is only one item. Problems solved.
 
@@ -128,16 +128,16 @@ Grunt has robust file manipulation utilities; file handling is at its core. With
 
 If you have asynchronous operations, you initialize the async facility
 
-{% highlight js %}
+```CoffeeScript
 grunt.registerMultiTask('convertExcelToJson', 'Convert Excel files to JSON files', function() {
   var done = this.async();
-{% endhighlight %}
+```
 
 To register the task as an asynchronous operation and call done() when all operations are complete.
 
 In my case, I have potentially many asynchronous file reads and writes and need to call done() exactly once when the last file is processed. Simple solution: counter.
 
-{% highlight js %}
+```js
 var fileCount = this.files.length;
 var filesProcessed = 0;
 
@@ -148,7 +148,7 @@ this.files.forEach(function(f) {
     }
   });
 });
-{% endhighlight %}
+```
 
 
 ## Protect the user
@@ -159,39 +159,39 @@ So the next step for me was to imagine every way that a user could screw up and 
 
 If things go horribly wrong and you think you should abort the build, use grunt.fail.fatal
 
-{% highlight js %}
+```js
 if (!grunt.file.exists(f.src[0])) {
   grunt.fail.fatal('convertExcelToJson: Source file "' + f.src[0] + '" not found. Cannot continue.');
-{% endhighlight %}
+```
 
 to produce
 
-{% highlight bash %}
+```bash
 Running "convertExcelToJson:dist" (convertExcelToJson) task
 Fatal error: convertExcelToJson: Source file "test/fixtures/ro-oriented.xlsx" not found. Cannot continue.
-{% endhighlight %}
+```
 
 Using grunt.fail.warn still aborts the build but with a less strong message
 
-{% highlight js %}
+```js
 if (f.src.length > 1) {
   grunt.fail.warn('convertExcelToJson: Multiple source files not supported: using only the first one.');
 }
-{% endhighlight %}
+```
 
 produces
 
-{% highlight bash %}
+```bash
 Running "convertExcelToJson:dist" (convertExcelToJson) task
 Warning: convertExcelToJson: Multiple source files not supported: using only the first one. Use --force to continue.
-{% endhighlight %}
+```
 
 For non-fatal errors that just suggests they are doing something wrong, grunt.log.warn seems like the best solution. It logs a little differently but does not bail on the build.
 
-{% highlight bash %}
+```bash
 Running "convertExcelToJson:dist" (convertExcelToJson) task
 >> convertExcelToJson: Multiple source files not supported: using only the first one.
-{% endhighlight %}
+```
 
 ## Cleaning up and publishing
 
@@ -199,9 +199,9 @@ Now that functionality is in place, rudimentary testing passes, time to install 
 
 You can create a peer directory, `npm init`, and then
 
-{% highlight bash %}
-npm install ..\grunt-excel-as-json
-{% endhighlight %}
+```bash
+npm install ../grunt-excel-as-json
+```
 
 Once that testing passes, you can control what is published by adding a `.npmignore` file. Perhaps a `.travis.yml`? Commit to GitHub, create a release, and then the normal npm publish procedure.
 
