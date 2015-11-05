@@ -1,4 +1,8 @@
-# Blogs you should read
+---
+layout: static
+title:  "Blogs you should read"
+---
+
 
 [The Netflix Tech Blog](http://techblog.netflix.com): Netflix has defined cloud-scale by implementation and Adrian Cockroft held the torch for the transformation. 
 

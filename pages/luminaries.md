@@ -1,4 +1,8 @@
-# Luminaries
+---
+layout: static
+title:  "Luminaries"
+---
+
 
 plural noun: luminaries
 
