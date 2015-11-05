@@ -6,7 +6,8 @@ date:   2015-09-12
 categories: intellij mongo mongodb syntax highlighting
 ---
 
-![CoffeeScript](/images/coffeescript_logo.png) 
+<img style="float: left;" src="/images/coffeescript_logo.png">
+
 
 When you find the right language, build and test system, supporting tools and services, they feel like a favorite T-Shirt, and you want to wear them all the time.
 

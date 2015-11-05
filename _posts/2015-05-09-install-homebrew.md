@@ -5,7 +5,8 @@ date:   2015-05-09 19:32:15
 categories: architecture cloud mac
 ---
 
-![Homebrew](/images/homebrew_osx_logo.png) 
+<img style="float: left;" src="/images/homebrew_osx_logo.png">
+
 
 Cloud development requires an arsenal of rapidly evolving tools, and the ability to easily upgrade and downgrade them; you need a package manager.
 

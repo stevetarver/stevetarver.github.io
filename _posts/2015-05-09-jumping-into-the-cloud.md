@@ -7,7 +7,7 @@ categories: architecture cloud mac
 
 Let's say, for some reason, you are interested in Cloud Architecture and you want to sky dive.
 
-TL;DR Why develop for the cloud, intro to future posts.
+**TL;DR** Why develop for the cloud, intro to future posts.
 
 ## Why?
 

@@ -3,10 +3,11 @@ layout: post
 title:  "My first grunt"
 subtitle: "Walk through of creating a simple Grunt task"
 date:   2015-09-03 
-categories: excel grunt task json nodeunit npm
+categories: grunt excel task json nodeunit npm
 ---
 
-![Grunt](/images/grunt-1.png) 
+<img style="float: left;" src="/images/grunt-1.png">
+
 
 I had this idea to make static site data generation easier. It worked out pretty well but I thought I might use it again, so I made it an npm package. Then I thought it would be even handier as a grunt task...  never done that before... could be fun.
 

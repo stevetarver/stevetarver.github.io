@@ -6,7 +6,8 @@ date:   2015-05-28 17:03:03
 categories: mac ansible docker kitematic vagrant vm
 ---
 
-![Ansible](/images/docker.png) 
+<img style="float: left;" src="/images/docker.png">
+
 
 Docker provides another way to run non-native software on your mac. More importantly, Docker allows you to build your own images and run them locally, under Vagrant, or on linux boxes in the cloud.
 

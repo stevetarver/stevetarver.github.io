@@ -6,7 +6,8 @@ date:   2015-05-10 17:15:16
 categories: mac macdown vagrant virtualbox vm
 ---
 
-![Vagrant](/images/vagrant-logo.png) 
+<img style="float: left;" src="/images/vagrant-logo.png">
+
 
 Vagrant makes it trivial to provision VMs on your desktop.  With it, you can quickly setup, provision and teardown VMs. You can use this for running non-native applications, use complex application stacks without contaminating your machine, test Ansible playbooks, Chef recipes and Docker images.
 

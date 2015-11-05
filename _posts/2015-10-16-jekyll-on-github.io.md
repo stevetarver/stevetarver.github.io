@@ -1,33 +1,35 @@
 ---
 layout: post
 title:  "First GitHub.io on Jekyll"
-date:   2015-10-03 
-categories: github pages jekyll static-site
+date:   2015-10-16
+categories: github pages jekyll static-site macdown
 ---
 
-Curiously, programmers repeat tedious processes until some level or pain or annoyance is met. They could fix the problem straight away, but they endure until it pisses them off sufficiently and they finally fix it. But, ... maybe that's just me and my lazy system of prioritization or system of lazy prioritization.
+<img style="float: left;" src="/images/jekyll-github-logo.png">
 
-I finally reached that point with blogspot.com. The tedium of using anything but their standard layouts, adding the right number of spaces after headdings, and especially syntax highlighting code snippets finally put me there. I have such great tools for doing everything else in my life, why is it so hard to just capture my thoughts and have a descent layout.
+Curiously, programmers repeat tedious processes until some level of pain or annoyance is met. They could fix the problem straight away, but they endure until it pisses them off sufficiently and they finally fix it. But, ... then again, maybe that's just me and my lazy system of prioritization or system of lazy prioritization.
 
-I just want a place:
+**TL;DR**: Up and running with jekyll on github.io
+
+I finally reached that point with blogspot.com. The tedium of using anything but their standard layouts, adding the right number of blank lines after headings, and especially syntax highlighting code snippets finally put me there. I have such great tools for doing everything else in my life, why is it so hard to just capture my thoughts and have a descent layout.
+
+All I want is a place:
 
 - that is free
 - that I have decent presentation that is easy to change
 - where I can effortlessly capture my thoughts
-- and technical posts (syntax highlighting) is no problem
+- where technical posts (syntax highlighting) is no problem
 
 I looked at several options and there was there were no clear winners. I originally passed on github.io because there was no clear getting started guide with the features I wanted. My journey brings me back, and with a small effort, I found the perfect host:
 
 - version control as a site provider
-- write in MarkDown with the excellent MacDown
+- write in MarkDown with the excellent [MacDown](http://macdown.uranusjr.com)
 - many themes to use as a starting point
 - local hosting for site development
 
-Solution: github.io with Jekyll
+**Solution**: github.io with Jekyll
 
-TL;DR: Up and running with jekyll on github.io
-
-I started with the default site and mehh. I tried the github.io pre-fab sites and they were OK, a definate improvement. then I made the leap to a Jekyll site.
+I started with the default site and mehh... I tried the github.io pre-fab sites and they were OK, a definate improvement. then I made the leap to a Jekyll site.
 
 Here is a guide to setting up your first github.io site with jekyll in about 7 minutes - even if you have never used ruby, Jekyll, or a static site generator.
 
@@ -41,7 +43,7 @@ Here is a guide to setting up your first github.io site with jekyll in about 7 m
 
 ### Create and run the site
 
-3. Install and configure XCode. I know, a given, but if you automatically update and don't frequently use XCode, you can run into a couple of different build errors. Start XCode and agree to terms and licence to avoid one. To verify command tools are installed:
+3. Install and configure XCode. I know, a given, but if you automatically update and don't frequently use XCode, you can run into a couple of obscurely annotated build errors. Start XCode and agree to terms and licence to avoid them. To verify command tools are installed:
 	
 	```
 	xcode-select --install
@@ -103,33 +105,30 @@ Here is a guide to setting up your first github.io site with jekyll in about 7 m
 3. Your changes should be immediately viewable on http://{username}.github.io
 
 
-### Select a theme
+## Select a theme
 
 ### References
 
 - [Jekyll Templates](http://jekyll.tips/templates/)
 - [Jekyll themes](http://jekyllthemes.org)
 
-There are a couple of central theme sites and some tools that make changing themes easy. For a first cut, the basic procedure is to find a them you like, clone it, and copy its files over yours. Jekyll has a lot better separation of post and presentation. In blogspot, every them change required that I re-install the syntax highlighting solution.
+There are a couple of central theme sites and some tools that make changing themes easy. For a first cut, the basic procedure is to find a them you like, clone it, and copy its files to your project. 
 
+Jekyll has a lot better separation of post and presentation than blogspot. In blogspot, every theme change required that I re-install the syntax highlighting solution in the main html page.
 
+Some tips:
 
-Add a _drafts directory to hold posts that are in the works.
-
-Add an images directory to store site images
-
-_posts file naming convertion is YYYY-MM-DD.post name.md
-
-How to Displaying an index of posts: http://jekyllrb.com/docs/posts/
-
-You can evolve your site as the mood motivates
-
-Show your drafts with jekyll serve --drafts
+1. Add a _drafts directory to hold posts that are in the works.
+1. Add an images directory to store site images
+1. _posts file naming convention is YYYY-MM-DD.post name.md
+1. How to Displaying an index of posts: http://jekyllrb.com/docs/posts/
+1. You can evolve your site as the mood motivates
+1. Server your drafts with jekyll serve --drafts
 
 
 ## Theme Directories
 
-the hardest part of changing themes is finding one you like. Here are some directories to look through:
+The hardest part of changing themes is finding one you like. Here are some directories to look through:
 
 - [dr. jekyll's themes](https://drjekyllthemes.github.io)
 - [Jekyll Themes](*http://jekyllthemes.org)   
