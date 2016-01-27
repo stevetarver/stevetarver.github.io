@@ -10,17 +10,18 @@ social:
   #hacker_news: swanson
   stackexchange: 1095573
   stackoverflow: 1089228
-  #twitter: _swanson
+  twitter: shtarver
   #facebook: zuck
   #tumblr: animalygifs
   linkedin: stevetarver
   #gplus: 110552447039675960964
   gravatar: 550c1008cc44fa49f3d5ab958f289390
   #flickr: johndoe
+  instagram: steve.tarver
 
 # "Hi, I'm _______"
 name: Steve Tarver
-email: test@example.com
+email: steve.tarver@gmail.com
 tagline: "weak opinions, strongly held"
 
 # Google Analytics key, leave blank to ignore

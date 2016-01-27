@@ -1,6 +1,6 @@
 ---
 layout: static
-title:  "Blogs you should read"
+title:  "Favorite Blogs"
 ---
 
 

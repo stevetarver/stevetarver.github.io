@@ -2,7 +2,7 @@
 layout: post
 title:  "NoSQL as a Service (intro)"
 date:   2015-11-16
-categories: Orchestrate NoSQL database db DBaaS geospatial graph 
+categories: Orchestrate database db DBaaS NoSQL geospatial graph 
 ---
 
 <img style="float: left;" src="/images/orchestrate-spin-logo.gif">

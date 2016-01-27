@@ -18,15 +18,21 @@ Find me:
   </a>
   {% endif %}
 
+  {% if site.data.theme.social.stackoverflow %}
+  <a title="{{ site.data.theme.name }} on Stack Overflow" href="http://stackoverflow.com/users/{{site.data.theme.social.stackoverflow }}">
+    <i class="fa fa-stack-overflow"></i>
+  </a>
+  {% endif %}
+
   {% if site.data.theme.social.stackexchange %}
   <a title="{{ site.data.theme.name }} on Stack Exchange" href="https://stackexchange.com/users/{{site.data.theme.social.stackexchange }}">
     <i class="fa fa-stack-exchange"></i>
   </a>
   {% endif %}
 
-  {% if site.data.theme.social.stackoverflow %}
-  <a title="{{ site.data.theme.name }} on Stack Overflow" href="http://stackoverflow.com/users/{{site.data.theme.social.stackoverflow }}">
-    <i class="fa fa-stack-overflow"></i>
+  {% if site.data.theme.social.linkedin %}
+  <a title="{{ site.data.theme.social.linkedin }} on LinkedIn" href="https://www.linkedin.com/in/{{ site.data.theme.social.linkedin }}">
+    <i class="fa fa-linkedin-square"></i>
   </a>
   {% endif %}
 
@@ -48,12 +54,6 @@ Find me:
   </a>
   {% endif %}
 
-  {% if site.data.theme.social.linkedin %}
-  <a title="{{ site.data.theme.name }} on LinkedIn" href="https://www.linkedin.com/in/{{ site.data.theme.social.linkedin }}">
-    <i class="fa fa-linkedin-square"></i>
-  </a>
-  {% endif %}
-
   {% if site.data.theme.social.gplus %}
   <a title="{{ site.data.theme.name }} on Google Plus" href="https://plus.google.com/{{ site.data.theme.social.gplus }}">
     <i class="fa fa-google-plus-square"></i>
@@ -63,6 +63,12 @@ Find me:
   {% if site.data.theme.social.flickr %}
   <a title="{{ site.data.theme.name }} on Flickr" href="https://www.flickr.com/photos/{{ site.data.theme.social.flickr }}">
     <i class="fa fa-flickr"></i>
+  </a>
+  {% endif %}
+
+  {% if site.data.theme.social.instagram %}
+  <a title="{{ site.data.theme.social.instagram }} on Instagram" href="https://www.instagram.com/{{ site.data.theme.social.instagram }}">
+    <i class="fa fa-instagram"></i>
   </a>
   {% endif %}
 
