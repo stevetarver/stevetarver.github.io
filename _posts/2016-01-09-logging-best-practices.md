@@ -25,7 +25,9 @@ Enterprise wisdom tells us that 90% of the life of a product happens after initi
 - Execution environment monitoring with products like [Prometheus](https://prometheus.io/).
 - Interprocess request tracing with products like [Zipkin](http://zipkin.io/)
 
-There is some necessary overlap between `/metrics` and logging. `/metrics` provide a snapshot of your code with counters and guages, collected on some short period, and Prometheus provides a way to organize those snapshots in meaningful views. Log based metrics provide both a more wholistic view of more granular information in a way that is easily aggregated and analyzed. For example, in `/metrics`, you may capture average call duration but how do you see only outliers; the one call that was 10x average, calculate 90th percentile after the fact. Providing this kind of post-mortem, ad hoc query producing actionable analysis justifies the double data recording in `/metrics` and logging. If you are overly concerned with, or culpable for, product quality, you will learn this value.
+There is some necessary overlap between `/metrics` and logging. `/metrics` provide a snapshot of your code with counters and guages, collected on some short period, and Prometheus provides a way to organize those snapshots in meaningful views. Log based metrics provide a more wholistic view of more granular information in a way that is easily aggregated and analyzed. 
+
+For example, in `/metrics`, you may capture average call duration but how do you see only outliers; the one call that was 10x average, calculate 90th percentile after the fact. Providing this kind of post-mortem, ad hoc query, producing actionable analysis justifies the double data recording in `/metrics` and logging. If you are overly concerned with, or culpable for, product quality, you will learn this value.
 
 When choosing one of several logging frameworks for your environment, the key factor is how easily you can produce log entries that are efficiently and effectively ingested by your logging aggregator.
 
@@ -54,10 +56,10 @@ Given the wealth of information aleady available from other systems, how can log
 Narrative log entries read like a diary of actions taken to accomplish a task. These are vital to reproducing production issues in a development environment and rapid remediation. Some key goals for these types of entries are:
 
 - Log API request params so you can replicate an API call locally
-- Significant branching decisions and values used to make those decisions
-- Out of process calls. If that process is not monitored by your log aggregator, request params, call duration, and response status should be logged to provide a more complete task view.
+- Log significant branching decisions and values used to make those decisions
+- Log out of process calls. If that process is not monitored by your log aggregator, request params, call duration, and response status should be logged to provide a more complete task view.
 
-## What should I be logging
+## What should I be logging?
 
 Logging should be minimal, yet meet the above goals. 
 
@@ -117,22 +119,20 @@ Concrete example:
 2014-09-04T19:18:55.656+0000 level=INFO, thread_id='http-51101-6', cat=RestResource, class=com.github.stevetarver.rest.impl.ContactResourceImpl, method=getContact executionPoint=request, id=0050568A-011D-11E3-E37D-C03336F01F4C, message='Getting contact 0050568A-011D-11E3-E37D-C03336F01F4C"
 ```
 
-All log aaggregators, Splunk, Graylog2, ELK, as well as logging services will parse logs more efficiently, effectively, and meaningfully if they log in JSON: your logging framework needs to emit JSON. At a minimum, it needs to log in the format above - almost-json.
+All log aggregators, Splunk, Graylog2, ELK, as well as logging services will parse logs more efficiently, effectively, and meaningfully if you log in JSON: your logging framework needs to emit JSON. At a minimum, it needs to log in the format above - almost-json.
 
 
 ## What do log entries look like in code?
 
-Basically: Log in JSON, log parameters first, and then provide narrative messages.
+Guidance: Log in JSON, log parameters first, and then provide narrative messages.
 
 Create a method that generates an appropriate string representation for every object. In JavaScript, this is pretty straight-forward. In Java, the easiest solution is probably to use `Guava` in your toString() override. In go, go-kit provides a perfect implemenation for logging.
 
-Concrete example
+Concrete Java example
 
 ```java
 LOG.info("'executionPoint': 'request', contact: " + contact + ", message: 'Creating new contact'");
 ```
-
-
 
 ## 12 factor guidance
 
@@ -144,7 +144,7 @@ Briefly:
 
 And this is what Steve says:
 
-- log to persistent storage for reliability - kafka, rabbitmq, etc.
+- log to persistent storage for reliability - kafka, rabbitmq, etc. Your log aggregator reads from your persistent store.
 - use a log guid to track operations from app to middleware and then among collaborating microservices
 - use an environment trace monitor like zipkin if you can
 
@@ -168,13 +168,8 @@ Some systems have an abundance of logging levels. At some point this made sense,
 
 ## Security
 
-Clever hackers have exploited insecure code in log renderers like Splunk. You should consider protecting yourselves against this.
+Log renderers are not immune from security breaches, forged logs, and XSS attacks. Here are some things to consider:
 
-All logs shall output-encode user supplied data before writing that data to a log.  For example:
-```javaString field = request.getParameter("field");// ensure no CRLF injection into logs for forging recordsString clean = field.replace( '\n', '_' ).replace( '\r', '_' );if ( ESAPI.securityConfiguration().getLogEncodingRequired() ) {    clean = ESAPI.encoder().encodeForHTML(clean);    if (!field.equals(clean)) {        clean += " (Encoded)";    }}logger.info("The value of field was: " + clean);```The log entry may look like the following:`2013-08-19 12:34:56.789 … message=”The value of field was: 10 (Encoded)”…`
-
-1.1.1	Log Forging AttackLog forging is the attempt by an attacker to introduce fake logs into the logging system, and the main reason is to invalidate the logs during an audit.  If it can be proved that a log has been altered, then the entire log file is suspect and cannot be trusted.  Thus, what happens if the user enters into the “field” the following data?`10\r\n2013-08-19 12:34:56.789 … message=”Account successfully created”…`Then your log entry will look like:```
-2013-08-19 12:34:56.789 … message=”The value of field was: 10”…2013-08-19 12:34:56.789 … message=”Account successfully created”…
-```Thus, the attacker successfully added an additional log record to your log file.
-### 1.1.2	XSS Log AttackAnother trick used by attackers is to try to get internal users to execute injected code.  Since most logging tools like Splunk use the browser to display logs, it is not unusual for an attacker to hope an internal user will execute malicious JavaScript when viewing the logs.  Thus, what happens if the user enters into field the following data?`<script>alert(‘xss’)</script>`The log entry would look like the following:`2013-08-19 12:34:56.789 … message=”The value of field was: <script>alert(‘xss’)</script>”…`Anyone who views this log through the browser will get an alert message.
-
+- CRLF injection via user supplied data: protect by ouput encoding using `ESAPI.encoder().encodeForHTML(<string>)`
+- Log Forging Attack: If it can be proved that a log has been altered, then the entire log file is suspect and cannot be trusted. If a user can supply data that adds log entries, through injected CRLF, your log as a record has been invalidated.
+- XSS attacks: If a user can embed code in your logs, and your log renderer presents that code, what happens when a user clicks on a generated link?
