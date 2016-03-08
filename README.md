@@ -17,6 +17,8 @@
 
 ```bundle exec jekyll serve```
 
+```bundle exec jekyll serve --drafts```
+
 
 
 Built on lagom: https://github.com/swanson/lagom

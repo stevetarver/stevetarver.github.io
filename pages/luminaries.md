@@ -42,6 +42,16 @@ Senior Director of Technology at Pivotal
 - [Linked In](https://www.linkedin.com/in/andrewclayshafer)
 - [Twitter](https://twitter.com/littleidea)
 
+### Mitchel Hashimoto
+
+Founder Hashicorp
+
+## Datastores
+
+### Slava Akmechet
+
+Founder Rethink db
+
 ## Speaking
 
 ### Derick Bailey
