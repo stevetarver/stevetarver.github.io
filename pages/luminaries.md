@@ -8,6 +8,19 @@ plural noun: luminaries
 
 1. a person who inspires or influences others, especially one prominent in a particular sphere.
 
+## Generalists
+
+### Yehuda Katz
+
+I'm am always impressed with Yehuda's breadth of knowledge, clarity of thought, instinct for the 'right' solution, and his ability to clearly communicate compelling justifications for his positions.
+
+Open Source: Ember.js (co-creator), Rust core, Ruby on Rails (retired), jQuery core (retired).
+
+- [Blog](http://yehudakatz.com/)
+- [GitHub](https://github.com/wycats)
+- [LinkedIn](https://www.linkedin.com/in/yehudakatz)
+- [Twitter](https://twitter.com/wycats)
+
 ## Language
 
 ### Jeremy Ashkenas
