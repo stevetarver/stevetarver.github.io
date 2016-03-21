@@ -2,7 +2,7 @@
 layout: post
 title:  "Percona as a Docker container"
 date:   2016-03-19 17:25:16
-categories: docker percona mysql
+categories: docker percona mysql sql
 ---
 
 <img style="float: left;" src="/images/percona_logo.png">
@@ -126,12 +126,12 @@ If you decide you want a different configuration later, you can `docker rmi -f i
 
 Our `docker run` arguments are:
 
-- --name: the name of the docker image inside the docker machine. I always use percona so any scripts I develop will work with any percona target.
-- -p: the mysql port that will be exposed to the docker host.
-- --restart=always: automatically start this container when the docker machine is started
-- -v: map a local directory onto /etc/mysql/conf.d as a way to override my.cnf properties.
-- -e MYSQL_ROOT_PASSWORD: an environment variable that will be used to initialize the database root account password.
-- -d: run the named container detached; in the background
+- `--name`: the name of the docker image inside the docker machine. I "percona" (without a tag) so any scripts I develop will work with any percona target.
+- `-p`: the mysql port that will be exposed to the docker host.
+- `--restart=always`: automatically start this container when the docker machine is started
+- `-v`: map a local directory onto `/etc/mysql/conf.d` as a way to override `my.cnf` properties.
+- `-e MYSQL_ROOT_PASSWORD`: an environment variable that will be used to initialize the database root account password.
+- `-d`: run the named container detached; in the background
 
 ```
 $ docker run --name percona \
@@ -198,7 +198,8 @@ Wondering what is going on with your database? You can view the logs from the te
 
 You can stop the container by using 2 digits of its contain id.
 
-```$ docker ps
+```
+$ docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
 875195b37308        percona:5.6         "/docker-entrypoint.s"   31 minutes ago      Up 31 minutes       3306/tcp            percona
 
@@ -295,7 +296,7 @@ eval $(docker-machine env $MACHINE_NAME)
 # Create the conf.d directory if it does not already exist
 mkdir -p $MY_CNF_DIR
 
-# Pull the docer image and pull it
+# Pull the docker image, create our container, and start it
 docker run --name percona \
     -p 3306:3306 \
     --restart=always \

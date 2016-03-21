@@ -28,7 +28,7 @@ Andrew Clay Shafer has a wealth of hard won operational experience and can easil
 
 **Current**:  Creator of Ruby on Rails, Founder & CTO at Basecamp <br/>
 
-DHH has a clear vision of what should be, and that it should always bring joy to developers. I admire that clear sense of vision and itegrity, and how RoR has impacted the programming world.
+DHH has a clear vision of what should be, and that it should always bring joy to developers. I admire that clear sense of vision and integrity, and how RoR has impacted the programming world.
 
 
 ### Jeremy Ashkenas<span>&nbsp;&nbsp;&nbsp;</span><a href="https://github.com/jashkenas" title="Github" class="fa fa-github-square">&nbsp;</a><a href="https://twitter.com/jashkenas" title="Twitter" class="fa fa-twitter-square">&nbsp;</a><a href="https://www.youtube.com/results?search_query=jeremy+ashkenas" title="YouTube" class="fa fa-youtube">&nbsp;</a><a href="https://www.instagram.com/jashkenas/" title="Instagram" class="fa fa-instagram">&nbsp;</a>
