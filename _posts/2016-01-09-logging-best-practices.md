@@ -135,7 +135,7 @@ Wow, that is pretty ugly. But that message is not for you, it is for the log agg
 
 Every object should have a `toString()` that emits a JSON object. 
 
-```
+```java
     @Override
     public String toString() {
         return (new Gson()).toJson(this);

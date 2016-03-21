@@ -59,7 +59,7 @@ This Grunt task is a grunt-mocha fork with a small but powerful addition: the ab
 
 This Grunt task configuration runs the mocha tests in build/index.html and writes the lcov report to the coverage directory. This provides html for immediate code improvement and lcov.info to upload to CodeCov.io or Coveralls.io
 
-```CoffeeScript
+```coffeescript
 mocha:
   test:
     src: "build/index.html"
@@ -92,13 +92,13 @@ The Browserify transform pipeline is normally given as an array of strings.
 
 Many transforms will take arguments and to accomodate this, grunt-browserify has a special syntax of:
 
-```CoffeeScript
+```coffeescript
 [transformName, {arg1: 'value1', arg2: 'value2'}]
 ```
 
 Elements of the transform pipeline array may be either transform name, or the transform with args syntax above. More concretely:
 
-```CoffeeScript
+```coffeescript
 browserify:
   test:
     src:  "#{spec}/spec-main.coffee"
