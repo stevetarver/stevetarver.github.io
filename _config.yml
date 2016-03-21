@@ -1,9 +1,10 @@
 # General Jekyll Config
 highlighter: pygments
-markdown: redcarpet
+markdown: kramdown
 url: http://stevetarver.github.io
 lsi: false
 exclude: [LICENSE, CNAME, README.md, .gitignore, Gemfile, Gemfile.lock]
 
-redcarpet:
-  extensions: [tables]
+kramdown:
+  input: GFM
+  enable_coderay: true
