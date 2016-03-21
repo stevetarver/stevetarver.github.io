@@ -83,7 +83,7 @@ To see how to connect your Docker Client to the Docker Engine running on this vi
 ```
 Now connect the terminal to the new docker machine
 
-```
+```shell
 $ docker-machine env percona-5.6
 export DOCKER_TLS_VERIFY="1"
 export DOCKER_HOST="tcp://192.168.99.100:2376"
@@ -97,7 +97,7 @@ $ eval $(docker-machine env percona-5.6)
 
 It doesn't look like much has changed, but docker is now available and I can
 
-```
+```shell
 $ docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 ```
@@ -133,7 +133,7 @@ Our `docker run` arguments are:
 - `-e MYSQL_ROOT_PASSWORD`: an environment variable that will be used to initialize the database root account password.
 - `-d`: run the named container detached; in the background
 
-```
+```shell
 $ docker run --name percona \
     -p 3306:3306 \
     --restart=always \
@@ -162,7 +162,7 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 
 Right now, I can connect to the MySQL command line client. Note that I use `--rm percona:5.6`; including the version tag. If left bare, docker will assume `latest` and try to pull that image.
 
-```
+```shell
 $ docker run -it --link percona:mysql --rm percona:5.6 sh \
   -c 'exec mysql -h"$MYSQL_PORT_3306_TCP_ADDR" -P"$MYSQL_PORT_3306_TCP_PORT" -uroot -p"$MYSQL_ENV_MYSQL_ROOT_PASSWORD"'
 Warning: Using a password on the command line interface can be insecure.
@@ -198,7 +198,7 @@ Wondering what is going on with your database? You can view the logs from the te
 
 You can stop the container by using 2 digits of its contain id.
 
-```
+```shell
 $ docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
 875195b37308        percona:5.6         "/docker-entrypoint.s"   31 minutes ago      Up 31 minutes       3306/tcp            percona
@@ -216,7 +216,7 @@ If you don't have your own data, you can clone my [sample-data](https://github.c
 
 Connect to the mysql command line client as shown above, create a `test` schema and use it, and paste in your init script.
 
-```
+```shell
 $ docker run -it --link percona:mysql --rm percona:5.6 sh \
   -c 'exec mysql -h"$MYSQL_PORT_3306_TCP_ADDR" -P"$MYSQL_PORT_3306_TCP_PORT" -uroot -p"$MYSQL_ENV_MYSQL_ROOT_PASSWORD"'
 # ...
@@ -241,7 +241,7 @@ mysql> select * from contacts;
 
 Our run (create) command exposed port 3306 on the docker machine. We can find the docker machine ip with
 
-```
+```shell
 $ docker-machine ip percona-5.6
 192.168.99.100
 ```
@@ -269,7 +269,7 @@ To see all options you can configure:
 
 Pulling all this together, we can create a bash script that will tear down and recreate the Percona docker machine and container for us.
 
-```
+```bash
 #!/bin/bash
 
 # Creates and initializes a percona-5.6 docker machine, pulls
@@ -315,7 +315,7 @@ docker run -it --link percona:mysql \
 
 _NOTE_: If you are using the contacts script from my `sample-data`, you need to add this to the top.
 
-```
+```sql
 create schema test;
 use test;
 ```
