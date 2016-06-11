@@ -2,7 +2,7 @@
 layout: post
 title:  "Percona as a Docker container"
 date:   2016-03-19 17:25:16
-categories: docker percona mysql sql
+tags: docker percona mysql sql
 ---
 
 <img style="float: left;" src="/images/percona_logo.png">

@@ -3,7 +3,7 @@ layout: post
 title:  "Git: Branching Basics"
 subtitle: ""
 date:   2015-08-30 16:56:11
-categories: git branch command-line fetch merge pull push rebase
+tags: git branch command-line fetch merge pull push rebase
 ---
 
 Once upon a time, I had to introduce Git to a subversion community. So I read the Pro Git book, mined some cool sites, and took notes.

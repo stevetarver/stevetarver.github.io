@@ -2,7 +2,7 @@
 layout: post
 title:  "Jumping into the Cloud"
 date:   2015-05-09 17:30:55
-categories: architecture cloud mac
+tags: architecture cloud mac
 ---
 
 Let's say, for some reason, you are interested in Cloud Architecture and you want to sky dive.

@@ -2,7 +2,7 @@
 layout: post
 title:  "Logging as a First Class Citizen"
 date:   2016-01-09 13:22:05
-categories: logging splunk ELK logstash logback 12-factor
+tags: logging splunk ELK logstash logback 12-factor
 ---
 
 When I started getting serious about programming, I was indoctrinated into leading edge development methods for X Windows and C like PDD: Printf Driven Development. While you were trying to figure out how your code worked, you would litter the code with printf statements, run it, read the log, revise the code. By convention, you left the printf's in place to simplify future feature additions and so you could find and resolve bugs if they were ever reported.

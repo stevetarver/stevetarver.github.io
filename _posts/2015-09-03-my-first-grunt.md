@@ -3,7 +3,7 @@ layout: post
 title:  "My first grunt"
 subtitle: "Walk through of creating a simple Grunt task"
 date:   2015-09-03 
-categories: grunt excel task json nodeunit npm
+tags: grunt excel task json nodeunit npm
 ---
 
 <img style="float: left;" src="/images/grunt-1.png">

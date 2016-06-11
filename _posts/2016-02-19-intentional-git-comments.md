@@ -2,7 +2,7 @@
 layout: post
 title:  "Intentional Git Commit Messages"
 date:   2016-02-19 11:02:35
-categories: git scm
+tags: git scm
 ---
 
 <img style="float: left; width:180px;" src="/images/github-logo.jpg">

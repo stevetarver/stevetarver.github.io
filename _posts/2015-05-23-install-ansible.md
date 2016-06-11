@@ -3,7 +3,7 @@ layout: post
 title:  "Install Ansible"
 subtitle: "Install Ansible and deploy Jenkins"
 date:   2015-05-23 17:16:26
-categories: mac ansible cloud homebrew vagrant vm
+tags: mac ansible cloud homebrew vagrant vm
 ---
 
 <img style="float: left;" src="/images/ansible_logo_black_square_small.png">

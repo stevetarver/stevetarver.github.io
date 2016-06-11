@@ -3,7 +3,7 @@ layout: post
 title:  "Choose a ReST framework"
 subtitle: "Develop criteria for comparing ReST frameworks for cloud applications."
 date:   2015-07-17 17:04:53
-categories: cloud configuration deployment devops error-response logging microservice rest security serialization validation
+tags: cloud configuration deployment devops error-response logging microservice rest security serialization validation
 ---
 
 Old school enterprise architecture and cloud architecture have different service concerns and value different ReST framework features. Microservices allow you to decouple language choices, so a move to the cloud is a great time to re-think your ReST framework selection.

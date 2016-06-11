@@ -2,7 +2,7 @@
 layout: post
 title:  "Install Homebrew"
 date:   2015-05-09 19:32:15
-categories: architecture cloud mac
+tags: architecture cloud mac
 ---
 
 <img style="float: left;" src="/images/homebrew_osx_logo.png">

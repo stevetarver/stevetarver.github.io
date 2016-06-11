@@ -3,7 +3,7 @@ layout: post
 title:  "Git: Distributed Work Flows"
 subtitle: ""
 date:   2015-08-30 19:26:41
-categories: git centralized repo dictator and lieutenants integration manager
+tags: git centralized repo dictator and lieutenants integration manager
 ---
 
 Once upon a time, I had to introduce Git to a subversion community. So I read the Pro Git book, mined some cool sites, and took notes.

@@ -3,7 +3,7 @@ layout: post
 title:  "Don't be a hero"
 subtitle: "How do Vagrant, Ansible, Docker fit together, install Docker and run a container in Vagrant"
 date:   2015-05-29 17:01:43
-categories: agile coach hero
+tags: agile coach hero
 ---
 
 ## _Dear Agile Coach,_

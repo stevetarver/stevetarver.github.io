@@ -2,7 +2,7 @@
 layout: post
 title:  "First GitHub.io on Jekyll"
 date:   2015-10-16
-categories: github pages jekyll static-site macdown
+tags: github pages jekyll static-site macdown
 ---
 
 <img style="float: left;" src="/images/jekyll-github-logo.png">

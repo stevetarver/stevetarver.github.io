@@ -2,7 +2,7 @@
 layout: post
 title:  "A whole product concern logging implementation"
 date:   2016-04-20 23:25:16
-categories: logging java logback elk fluentd logstash kibana elasticsearch 12-factor postman
+tags: logging java logback elk fluentd logstash kibana elasticsearch 12-factor postman
 
 ---
 

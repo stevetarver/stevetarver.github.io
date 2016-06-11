@@ -3,7 +3,7 @@ layout: post
 title:  "CoffeeScript coverage"
 subtitle: "CoffeeScript coverage on client side with all the connective tissue."
 date:   2015-09-12
-categories: intellij mongo mongodb syntax highlighting
+tags: intellij mongo mongodb syntax highlighting
 ---
 
 <img style="float: left;" src="/images/coffeescript_logo.png">

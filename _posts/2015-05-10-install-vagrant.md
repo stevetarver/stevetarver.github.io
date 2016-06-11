@@ -3,7 +3,7 @@ layout: post
 title:  "Install Vagrant"
 subtitle: "Install VirtualBox and Vagrant and use them to provision a VM"
 date:   2015-05-10 17:15:16
-categories: mac macdown vagrant virtualbox vm
+tags: mac macdown vagrant virtualbox vm
 ---
 
 <img style="float: left;" src="/images/vagrant-logo.png">

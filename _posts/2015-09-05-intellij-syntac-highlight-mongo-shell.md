@@ -3,7 +3,7 @@ layout: post
 title:  "IntelliJ: Syntax highlight mongo shell documents"
 subtitle: "Create custom highlighting for mongo scripts in IntelliJ"
 date:   2015-09-05
-categories: intellij mongo mongodb syntax highlighting
+tags: intellij mongo mongodb syntax highlighting
 ---
 
 <img style="float: left;" src="/images/intellij.png">

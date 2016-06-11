@@ -3,7 +3,7 @@ layout: post
 title:  "ReST Response Codes"
 subtitle: "Develop criteria for comparing ReST frameworks for cloud applications."
 date:   2015-07-19 17:09:09
-categories: error-code response-code rest
+tags: error-code response-code rest
 ---
 
 ReST uses HTTP status codes as operation response codes. HTTP status codes are sufficiently comprehensive for ReST, yet target no specific domain; each service provider must figure out how to map their infrastructure and logical errors into the status code set.

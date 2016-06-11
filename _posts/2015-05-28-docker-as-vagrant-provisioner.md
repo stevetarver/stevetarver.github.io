@@ -3,7 +3,7 @@ layout: post
 title:  "Docker as Vagrant Provisioner"
 subtitle: "How do Vagrant, Ansible, Docker fit together, install Docker and run a container in Vagrant"
 date:   2015-05-28 17:03:03
-categories: mac ansible docker kitematic vagrant vm
+tags: mac ansible docker kitematic vagrant vm
 ---
 
 <img style="float: left;" src="/images/docker.png">
