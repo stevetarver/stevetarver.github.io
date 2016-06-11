@@ -8,7 +8,8 @@ tags: logging java logback elk fluentd logstash kibana elasticsearch 12-factor p
 
 <img style="float: left;" src="/images/spring-boot-project-logo.png">
 
-[Logging as a First Class Citizen](2016-01-09-logging-best-practices.md) describes what I think modern applications/services should be logging and why. Now, lets look at "how". I struggled with this for a while with Log4j, writing custom encoders to add kv pairs to log entries and aspects to extract API access event information - tedious and ugly. 
+
+Logging as a First Class Citizen describes what I think modern applications/services should be logging and why. Now, lets look at "how". I struggled with this for a while with Log4j, writing custom encoders to add kv pairs to log entries and aspects to extract API access event information - tedious and ugly. 
 
 I switched from Splunk to ELK and was introduced to [Logstash](https://www.elastic.co/products/logstash). Most of what I read was about cleaning up log entries with Logstash filters and routing versatility with plugins. What I really wanted to know was what ELK preferred for efficient ingestion and Kibana queries. While searching for logging guidance and pouring over the documentation, I found that [Logback](http://logback.qos.ch/) and the [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) solved all of my previous challenges while replacing custom code for configuration.
 
@@ -17,7 +18,7 @@ I switched from Splunk to ELK and was introduced to [Logstash](https://www.elast
 ## References
 
 - [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder)
-- [Logbask](http://logback.qos.ch/)
+- [Logback](http://logback.qos.ch/)
 - [Implementation](https://github.com/stevetarver/rest-start-spring-boot)
 
 The logstash-logback-encoder [README.md](https://github.com/logstash/logstash-logback-encoder) is a great resource for setup and evolution of your logging scheme. It took me a couple days of joining information from different sites and experimenting to get what I wanted. What I offer here is an opinionated solution and why each element of the strategy is important. You could probably just start with this setup and then evolve it to suit your situation.
