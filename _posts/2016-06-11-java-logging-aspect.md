@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "A logging aspect in java"
-date:   2015-06-12 19:32:15
+date:   2016-06-12 19:32:15
 tags: logging java spring logback
 
 ---
