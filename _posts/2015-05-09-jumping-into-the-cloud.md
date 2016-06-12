@@ -5,9 +5,9 @@ date:   2015-05-09 17:30:55
 tags: architecture cloud mac
 ---
 
-Let's say, for some reason, you are interested in Cloud Architecture and you want to sky dive.
-
 **TL;DR** Why develop for the cloud, intro to future posts.
+
+Let's say, for some reason, you are interested in Cloud Architecture and you want to sky dive.
 
 ## Why?
 

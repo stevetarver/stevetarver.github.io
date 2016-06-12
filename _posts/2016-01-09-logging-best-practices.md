@@ -5,13 +5,13 @@ date:   2016-01-09 13:22:05
 tags: logging splunk ELK logstash logback 12-factor
 ---
 
+**TL;DR** How to log with a Whole Product Concern
+
 When I started getting serious about programming, I was indoctrinated into leading edge development methods for X Windows and C like PDD: Printf Driven Development. While you were trying to figure out how your code worked, you would litter the code with printf statements, run it, read the log, revise the code. By convention, you left the printf's in place to simplify future feature additions and so you could find and resolve bugs if they were ever reported.
 
 X Windows? C? Yeah, the world has changed a lot in 25 years. New languages, platforms, and even modern incarnations of ancient languages have amazing tooling, debugging, robust logging frameworks, and support BDD and TDD. In the Enterprise, BDD and TDD are pervasive and change the emphasis from "get 'r done" to improving how you can reason about your code. Moving to the cloud implies moving to small DevOps oriented teams and a whole product concern. BDD, TDD are essential methods for improving your ability to reason about your code, and their artifacts are used to prove initial code and that code's evolution. 
 
 What role does logging play in this new environment?
-
-**TL;DR** How to log with a Whole Product Concern
 
 
 ## What's up in production?

@@ -6,14 +6,14 @@ tags: logging java logback elk fluentd logstash kibana elasticsearch 12-factor p
 
 ---
 
+**TL;DR** An implementation of logging with whole product concern in Spring Boot and Logback.
+
 <img style="float: left;" src="/images/spring-boot-project-logo.png">
 
 
 Logging as a First Class Citizen describes what I think modern applications/services should be logging and why. Now, lets look at "how". I struggled with this for a while with Log4j, writing custom encoders to add kv pairs to log entries and aspects to extract API access event information - tedious and ugly. 
 
 I switched from Splunk to ELK and was introduced to [Logstash](https://www.elastic.co/products/logstash). Most of what I read was about cleaning up log entries with Logstash filters and routing versatility with plugins. What I really wanted to know was what ELK preferred for efficient ingestion and Kibana queries. While searching for logging guidance and pouring over the documentation, I found that [Logback](http://logback.qos.ch/) and the [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) solved all of my previous challenges while replacing custom code for configuration.
-
-**TL;DR** An implementation of logging with whole product concern in Spring Boot and Logback.
 
 ## References
 
@@ -367,14 +367,45 @@ public class ContactsController {
 produces the LoggingEvent
 
 ```json
-{"@timestamp":"2016-03-13T22:36:44.067-06:00","@version":1,
-"logMessage":"Get Contact 5 requested","logLevel":"INFO","logThreadId":"http-nio-8080exec-1",
-"logClass":"c.g.s.c.ContactsController","logMethod":"get","id":5,
-"headers":{"host":["localhost:8080"],"connection":["keep-alive"],"cache-control":["max-age=0"],
-"accept":["text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"],
-"upgrade-insecure-requests":["1"],"user-agent":["Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36"],
-"accept-encoding":["gzip, deflate, sdch"],"accept-language":["en-US,en;q=0.8"],
-"cookie":["_ga=GA1.1.1621264663.1446705863"]}}
+{
+  "@timestamp": "2016-03-13T22:36:44.067-06:00",
+  "@version": 1,
+  "logMessage": "Get Contact 5 requested",
+  "logLevel": "INFO",
+  "logThreadId": "http-nio-8080exec-1",
+  "logClass": "c.g.s.c.ContactsController",
+  "logMethod": "get",
+  "id": 5,
+  "headers": {
+    "host": [
+      "localhost:8080"
+    ],
+    "connection": [
+      "keep-alive"
+    ],
+    "cache-control": [
+      "max-age=0"
+    ],
+    "accept": [
+      "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+    ],
+    "upgrade-insecure-requests": [
+      "1"
+    ],
+    "user-agent": [
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36"
+    ],
+    "accept-encoding": [
+      "gzip, deflate, sdch"
+    ],
+    "accept-language": [
+      "en-US,en;q=0.8"
+    ],
+    "cookie": [
+      "_ga=GA1.1.1621264663.1446705863"
+    ]
+  }
+}
 ```
 
 There are a lot of headers here, which may be useful to a UI component. API components may want to be more restrictive and pluck only the interesting headers. 
@@ -384,9 +415,17 @@ Both will want to avoid authentication headers and other sensitive information w
 This AccessEvent is also produced:
 
 ```
-{"@timestamp":"2016-03-13T22:36:44.440-06:00","@version":1,"method":"GET",
-"uri":"/contacts/5","statusCode":200,"elapsedTime":30,"contentLength":-1,
-"remoteHost":"0:0:0:0:0:0:0:1","queryString":""}
+{
+  "@timestamp": "2016-03-13T22:36:44.440-06:00",
+  "@version": 1,
+  "method": "GET",
+  "uri": "/contacts/5",
+  "statusCode": 200,
+  "elapsedTime": 30,
+  "contentLength": -1,
+  "remoteHost": "0:0:0:0:0:0:0:1",
+  "queryString": ""
+}
 ```
 
 The create method 
@@ -402,22 +441,47 @@ The create method
 produces the LoggingEvent
 
 ```json
-{"@timestamp":"2016-03-13T22:57:39.111-06:00","@version":1,
-"logMessage":"Create Contact bob@thebuilder.com requested","logLevel":"INFO",
-"logThreadId":"http-nio-8080-exec-1","logClass":"c.g.s.c.ContactsController",
-"logMethod":"create","contact":{"id":null,"firstName":"Bob","lastName":"The Builder",
-"companyName":"Bob's Construction","address":"1234 Beaver lane","city":"Austin",
-"county":"Pitkin","state":"TX","zip":"81615","phone1":"3136364482",
-"phone2":"3136369982","email":"bob@thebuilder.com","website":"http://bobthebuilder.com"}}
+{
+  "@timestamp": "2016-03-13T22:57:39.111-06:00",
+  "@version": 1,
+  "logMessage": "Create Contact bob@thebuilder.com requested",
+  "logLevel": "INFO",
+  "logThreadId": "http-nio-8080-exec-1",
+  "logClass": "c.g.s.c.ContactsController",
+  "logMethod": "create",
+  "contact": {
+    "id": null,
+    "firstName": "Bob",
+    "lastName": "The Builder",
+    "companyName": "Bob's Construction",
+    "address": "1234 Beaver lane",
+    "city": "Austin",
+    "county": "Pitkin",
+    "state": "TX",
+    "zip": "81615",
+    "phone1": "3136364482",
+    "phone2": "3136369982",
+    "email": "bob@thebuilder.com",
+    "website": "http://bobthebuilder.com"
+  }
+}
 ```
 We can see we can easily copy the contact JSON into Postman to reproduce this call.
 
 The AccessEvent event looks like
 
 ```json
-{"@timestamp":"2016-03-13T22:57:39.492-06:00","@version":1,"method":"POST",
-"uri":"/contacts","statusCode":200,"elapsedTime":487,"contentLength":-1,
-"remoteHost":"0:0:0:0:0:0:0:1","queryString":""}
+{
+  "@timestamp": "2016-03-13T22:57:39.492-06:00",
+  "@version": 1,
+  "method": "POST",
+  "uri": "/contacts",
+  "statusCode": 200,
+  "elapsedTime": 487,
+  "contentLength": -1,
+  "remoteHost": "0:0:0:0:0:0:0:1",
+  "queryString": ""
+}
 ```
 
 ## Tying your services together

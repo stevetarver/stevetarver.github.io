@@ -5,6 +5,8 @@ date:   2015-11-16
 tags: Orchestrate database db DBaaS NoSQL geospatial graph 
 ---
 
+**TL;DR**: _Introduction to the Orchestrate.io DBaaS_
+
 <img style="float: left;" src="/images/orchestrate-spin-logo.gif">
 
 In the good ol' Enterprise days, when you wanted to POC a new application or service, you would fill out the paperwork and, if you were a favorite son, have a new server to play with in just 5 months.
@@ -15,7 +17,6 @@ Then, your company committed to valuing Business Agility and paid for a place in
 
 I'm greedy. What's next? How can I get my POC in front of people even faster?
 
-**TL;DR**: _Introduction to the Orchestrate.io DBaaS_
 
 Data stores are the cornerstone of every application/service ... What if I could just skip database deployment and configuration, have a simplified admin, and just start using it?
 

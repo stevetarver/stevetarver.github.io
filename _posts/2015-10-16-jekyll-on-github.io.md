@@ -5,11 +5,11 @@ date:   2015-10-16
 tags: github pages jekyll static-site macdown
 ---
 
+**TL;DR**: Up and running with jekyll on github.io
+
 <img style="float: left;" src="/images/jekyll-github-logo.png">
 
 Curiously, programmers repeat tedious processes until some level of pain or annoyance is met. They could fix the problem straight away, but they endure until it pisses them off sufficiently and they finally fix it. But, ... then again, maybe that's just me and my lazy system of prioritization or system of lazy prioritization.
-
-**TL;DR**: Up and running with jekyll on github.io
 
 I finally reached that point with blogspot.com. The tedium of using anything but their standard layouts, adding the right number of blank lines after headings, and especially syntax highlighting code snippets finally put me there. I have such great tools for doing everything else in my life, why is it so hard to just capture my thoughts and have a descent layout.
 

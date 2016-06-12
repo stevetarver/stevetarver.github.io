@@ -5,13 +5,13 @@ date:   2016-03-19 17:25:16
 tags: docker percona mysql sql
 ---
 
+**TL;DR** Setup a Docker Percona image for general local use.
+
 <img style="float: left;" src="/images/percona_logo.png">
 
 When you start a new project, how do you guarantee a pristine database as a starting point? How do you switch between projects without one database contaminating the other? What about testing one version of MySQL against another prior to rolling out an upgrade to production? How do you make production rollouts as simple and low risk as possible, including the ability to rollback if you find an obscure bug you can't live with?
 
 In short: Docker.
-
-**TL;DR** Setup a Docker Percona image for general local use.
 
 Using docker containers, you can have multiple versions of multiple databases at the ready: dormant, running individually, or running concurrently. You can also quickly tear down the cruft and spin up new, pristine instances. 
 
