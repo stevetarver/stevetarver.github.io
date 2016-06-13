@@ -210,7 +210,7 @@ If we had a ContactsController, the create method would log something like this 
   "@timestamp": "2016-06-11T22:57:39.111-06:00",
   "@version": 1,
   "executionPoint": "request",
-  "loggedApiName": "ContactsController.create request",
+  "loggedApiName": "ContactsController.create",
   "logLevel": "INFO",
   "logMessage": "ContactsController.create request",
   "logThreadId": "http-nio-8080-exec-1",
