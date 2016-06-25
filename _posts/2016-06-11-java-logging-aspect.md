@@ -102,7 +102,7 @@ These are the pointcut definitions discussed above. Unlike package based pointcu
 
 ```java
     // Matches annotation on class
-    @Pointcut("within(@io.ctl.dbaas.common.aop.LoggedApi *)")
+    @Pointcut("within(@com.github.stevetarver.logging.LoggedApi *)")
     public void loggedApiClass() {}
 
     // Matches annotation on method
