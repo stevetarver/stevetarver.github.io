@@ -161,7 +161,7 @@ Overall, it looks like some tasks will be easier, like modifying and updating th
 
 Finally, we need to add the `json:api` component which makes Ember a dream to work in: related objects can be inferred by relationships links - no extra code to find or use them.
 
-```
+```shell
 $ npm install --save loopback-component-jsonapi
 ```
 
@@ -173,11 +173,15 @@ Add a `server/component-config.json` file with the following to include the midd
 }
 ```
 
-This component is very configurable but the defaults work for me. But here's a trick: when we deploy, we will want to dynamically set our host name that will be used in json:api links. Leave `component-config.json` an empty object and use something like this in that file's override `component-config.local.js`
+This component is very configurable but the defaults work for me. But here's a trick: when we deploy, we will want to dynamically set our host name that will be used in json:api links. Leave `component-config.json` an empty object and use something like this in that file's override `component-config.local.js`.
 
 ```javascript
-module.exports = {   "loopback-component-jsonapi": {     "host": process.env.MY_URL   } }; ```
-Now restart the loopback server and check out the response from `GET /api/contacts/5` - doesn't work.
+module.exports = {   "loopback-component-jsonapi": {     "host": process.env.MY_URL
+  } };
+```
+
+Now restart the loopback server and check out the response from `GET /api/contacts/5`.
+
 
 ```json
 {
@@ -209,6 +213,7 @@ Now restart the loopback server and check out the response from `GET /api/contac
   }
 }
 ```
+
 If we were to add to this application by adding a company table, update our model config to show the contact-company relationship, there would be relationship links that tie the two together. In Ember templates, you can use `contact.company` and Ember will automatically fetch the associated company. Just think how much code that one feature eliminates...
 
 That is all there is for this most basic config. All files are saved on disk so we can just close the API Connect window
@@ -245,14 +250,14 @@ Add bootstrap styles to our app: change `app/styles/app.css` to `app.scss` and a
 
 The application template is where every page will be loaded - our Single Page Application - and should include the navbar and an outlet for generated code:
 
+{% raw %}
 ```html
 <div>
-  {% raw %}
   {{partial 'navbar'}}
   {{outlet}}
-  {% endraw %}
 </div>
 ```
+{% endraw %}
 
 Create a standard bootstrap navbar in `navbar.hbs`. You can see the app by running `ember server`.
 
