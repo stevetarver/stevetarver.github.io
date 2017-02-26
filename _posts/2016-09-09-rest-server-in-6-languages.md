@@ -1,31 +1,34 @@
 ---
 layout: post
-title:  "Install Homebrew"
-date:   2015-05-09 19:32:15
-categories: rest
+title:  "ReST servers in 6 languages"
+date:   2016-09-09 19:32:15
+categories: rest golang gorilla groovy spark java springboot python falcon ruby sinatra node express
 ---
 
-A key part of the 12-factor app ecosystem is polyglot languages and polyglot datastores. 
+If you're in the cloud, you should be building [12-factor apps](https://12factor.net/). Emancipation from Enterprise IT frees you from monoliths and dogmatic language requirements. Then using microservices carves your solution into small, isolated chunks that encourage exploration.
 
-If you have a choice of many languages, how do you choose?
-
-Languages can offer an inherent simplicity, but supporting libraries can be the deciding vote.
-
-What criteria should be considered?
+So, if all language and frameworks are an option, how do you choose? The 12-factor app manifesto provides a pretty good scale; strong support for those tenants is a base. In addition:
 
 - language simplicity
-- an amazing library
-  - how much does the library do for you
-  - does it do the right things for you
-- validation
-- logging - is it done automatically by the library
-- datastore access
+- amazing libraries
+    - how much do the libraries do for you
+    - do they do the right things for you
+- validation 
+    - is it configuration based and extensible
+- logging 
+    - is it done automatically by the library
+    - is it easily consumed by the log aggregator
+- datastore access simplicity
+- json:api support
 - rich error responses
+- how much fun is it to work in
 
-Not an exhaustive comparison, just a listing of some popular languages and frameworks to give a little flavor and get the ball rolling.
+Not a bad list of concerns, it omits things that most already do well ... but how do you eat that elephant?
+
+What if we just started with: _What does the simplest ReST server look like?_
 
 
-# GO ([gorilla/mux](https://github.com/gorilla/mux))
+## GO ([gorilla/mux](https://github.com/gorilla/mux))
 
 Server code
 
@@ -34,10 +37,7 @@ package main
 
 import (
     "fmt"
-    "html"
-    "log"
     "net/http"
-
     "github.com/gorilla/mux"
 )
 
@@ -48,20 +48,18 @@ func Index(w http.ResponseWriter, r *http.Request) {
 func main() {
     router := mux.NewRouter().StrictSlash(true)
     router.HandleFunc("/", Index)
-    log.Fatal(http.ListenAndServe(":8080", router))
+    http.ListenAndServe(":8080", router)
 }
 ```
 
 Run Server
 
 ```go
-go get
+go run
 ```
 
 
-
-
-# Groovy ([Spark](http://sparkjava.com/))
+## Groovy ([Spark](http://sparkjava.com/))
 
 Download and install an SDK manager and install groovy
 
@@ -86,17 +84,14 @@ groovy Server.groovy
 ```
 
 
-# Java ([Spring Boot]())
+## Java ([Spring Boot]())
 
-_Note: although the code is brief, there is significant build and configuration_
+NOTES:
 
-_Note: you could use the spark framework here for a simpler implementation_
-
-[GitHub project](https://github.com/spring-guides/gs-actuator-service)
+* although the code is brief, there is significant build and configuration
+* you could use the spark framework here for a simpler implementation
 
 Server code
-
-
 
 ```java
 package hello;
@@ -140,8 +135,28 @@ Run server
 java -jar build/libs/gs-spring-boot-0.1.0.jar
 ```
 
+## JavaScript ([Node/Express](http://expressjs.com/))
 
-# Python ([Falcon](http://falconframework.org/))
+Server code
+
+```js
+var express = require('express');
+var app = express();
+
+app.get('/', function (req, res) {
+  res.send('Hello World!')
+});
+
+app.listen(3000, null);
+```
+
+Run server
+
+```
+node .
+```
+
+## Python ([Falcon](http://falconframework.org/))
 
 Server code
 
@@ -164,7 +179,7 @@ gunicorn sample:api
 ```
 
 
-# Ruby ([Sinatra](http://www.sinatrarb.com/))
+## Ruby ([Sinatra](http://www.sinatrarb.com/))
 
 Server code
 
