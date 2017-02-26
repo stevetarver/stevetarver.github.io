@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Ember-Loop-Sql"
-date:   2016-07-16 20:22:09
+date:   2016-08-21 20:22:09
 tags: ember strongloop percona mysql fullstack javascript
 
 ---

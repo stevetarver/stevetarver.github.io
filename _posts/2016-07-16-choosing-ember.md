@@ -1,11 +1,19 @@
-# Choosing Ember
+---
+layout: post
+title:  "Choosing Ember"
+date:   2016-07-16 02:13:33
+tags: ember javascript
 
+---
+
+**TL;DR**: How I chose a UI framework and lessons learned from a first Ember.js 2.x app.
+
+<img style="float: left;" src="/images/ember.png">
 
 My UI is having growing pains. It has reached the point where the architecture is restraining us instead of serving us; it is slowly eroding our business agility and affecting UX.
 
 The UI is jsp with some client-side javascript; more than just javascript sprinkles, but no dedicated SPA component. This made a lot of sense when the UI was created: the team has a lot of Java expertise so frameworks, building, packaging, deploying, and hosting were very familiar. The UI code was very simple so starting with a server-side app really helped get the product to market quickly. But now it is time to pay down that tech debt balloon that always accumulates around a product launch.
 
-**TL;DR**: How I chose a UI framework and lessons learned from a first Ember.js 2.x app.
 
 ## What problems am I trying to solve?
 
@@ -60,11 +68,11 @@ If these things are a match, I want to try them out for a while to prove that ma
 
 Those same concerns map pretty cleanly to how I think about framework choices. I don't have years of experience with these frameworks and don't have the time to gain that experience. I don't care about minimal performance gains or underlying implementation details. I care about how I feel when I use the framework, that it provides for my engineering concerns, and that working with it feels natural.
 
-So, if I listen to the authors speak, get familiar with their body of work, and it's a match, I feel a lot more comfortable spending the time to evaluate their framework.
+So, if I listen to the authors speak, get familiar with their body of work, and it's a match, I feel a lot more comfortable spending the time to evaluate their framework - much as I would with a new hire.
 
 ## The first project
 
-Ember.js provides good [guides](https://guides.emberjs.com/v2.4.0/) and [tutorials](http://emberwatch.com/tutorials.html). There is a lot out there to help you with your first project, just ensure it is Ember.js 2.4; a lot has changed since v1.x.
+Ember.js provides good [guides](https://guides.emberjs.com/v2.4.0/) and [tutorials](http://emberwatch.com/tutorials.html). There are a lot of guides and tutorials out there to help you with your first project, just ensure it is Ember.js 2.4; a lot has changed since v1.x.
 
 I won't be trying to provide a tutorial, there are already so many good ones out there. I will just be standing up a simple app and noting my reactions.
 
@@ -108,7 +116,7 @@ Facebook's Watchman directly addresses this problem. Even if you are not at Face
 brew install watchman
 ```
 
-After I create a new project, my next step is to commit the skeleton to git so I can roll back if I really screw something up. When I opened the project in WebStorm, the git log shows no uncommitted files. ??? During project generation, the `.gitignore` was created and all files committed by Tomster. Thanks for the assist Tom.
+After I create a new project, my next step is to commit the skeleton to git so I can roll back if I really screw something up. When I opened the project in WebStorm, the git log shows no uncommitted files. ??? During project generation, the `.gitignore` was created and all files were committed by Tomster. Thanks for the assist Tom.
 
 Let's run it and see what happens.
 
@@ -156,7 +164,9 @@ That's pretty helpful.
 npm install -g phantomjs
 ```
 
-```
+Let's try again.
+
+```shell
 $ ember test
 version: 2.4.2
 Built project successfully. Stored in "/Users/starver/code/rdbs/ds-admin-ui/tmp/class-tests_dist-98GG4OAa.tmp".
@@ -189,7 +199,8 @@ No code coverage? Not configured with the default skeleton but I see that there 
 
 Right now, I really want to start coding. I see that Babel is installed, so I can use all the improvements in ES6, but I still prefer CoffeeScript. I just like the way it looks. Probably for the same reasons I like Ruby, Jade, Stylus, and even Groovy.
 
-First, I'll update CoffeeScript since last September they added ES6 generators and ES6-style destructuring defaults. Then add the 
+First, I'll update CoffeeScript since last September they added ES6 generators and ES6-style destructuring defaults. Then add the Ember coffeescript generator.
+
 ```
 $ npm install -g coffee-script
 $ ember install ember-cli-coffeescript
@@ -212,7 +223,7 @@ $ ember install ember-cli-bootstrap-sassy
 $ mv app/styles/app.css app/styles/app.scss
 ```
 
-Simply importing Bootstrap into our `app.scss` file provides let's us start using Bootstrap styling.
+Simply importing Bootstrap into our `app.scss` file provides access to Bootstrap; let's us start using Bootstrap styling.
 
 ```
 @import "bootstrap";
@@ -224,14 +235,16 @@ body {
 
 Now we can replace `app/templates/application.hbs` content with
 
-```
+{% raw %}
+```html
 <div class="container">
   {{partial 'navbar'}}
   {{outlet}}
 </div>
 ```
+{% endraw %}
 
-The double moustache, `{{`, indicates a [Handlebars](http://handlebarsjs.com/) substitution. In this case, we have a partial for the navbar while the main page content will be dumped into `{{outlet}}`. All Ember templates are based on Handlebars.
+The double moustache, {% raw %}`{{`{% endraw %}, indicates a [Handlebars](http://handlebarsjs.com/) substitution. In this case, we have a partial for the navbar while the main page content will be dumped into {% raw %}`{{outlet}}`{% endraw %}. All Ember templates are based on Handlebars.
 
 ember-cli will generate the navbar template for us
 
@@ -241,6 +254,7 @@ ember generate template navbar
 
 And we'll use Zoltan's navbar for now
 
+{% raw %}
 ```
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
@@ -256,17 +270,18 @@ And we'll use Zoltan's navbar for now
 
     <div class="collapse navbar-collapse" id="main-navbar">
       <ul class="nav navbar-nav">
-            {{#link-to 'index' tagName="li"}}<a href="">Home</a>{{/link-to}}
+        {{#link-to 'index' tagName="li"}}<a href="">Home</a>{{/link-to}}
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
 ```
+{% endraw %}
 We can run the app now and see how that turned out.
 
 ## The first route
 
-On the server side, routes map a resource to a request handler. Each URI must be sufficiently distinct to identify a single request handler, may contain variables like a userId to select a user from the users collection, and can have some request variables to clarify the request. 
+On the server side, routes map a resource to a request handler. Each URI must be sufficiently distinct to identify a single request handler, may contain variables like a `userId` to select a user from the users collection, and can have some request variables to clarify the request. 
 
 Yehuda says "Don't break the internet", meaning that a SPA's URI should follow many of the same concepts as a server side request.
 
@@ -328,7 +343,7 @@ Router.map ->
 ```
 Re-generating:
 
-```
+```shell
 $ ember generate route about
 version: 2.4.2
 installing route
@@ -343,19 +358,25 @@ Ember generated our About route (which we could add models, templates, and actio
 
 **Note**: you must add these files to git manually.
 
-The `templates/about.hbs` contains one line: `{{outlet}}`. Let's add some text and see how it looks.
+The `templates/about.hbs` contains one line: {% raw %}`{{outlet}}`{% endraw %}. Let's add some text and see how it looks.
 
-```
+{% raw %}
+```html
 <h1>All about this app</h1>
 {{outlet}}
 ```
+{% endraw %}
+
 Browse `http://localhost:4200/about` to check it out.
 
 All good there, but no way to get to that page from the app. If we open `app/templates/navbar.hbs`, we can add 
 
-```
+{% raw %}
+```html
 {{#link-to 'about' tagName="li"}}<a href="">About</a>{{/link-to}}
 ```
+{% endraw %}
+
 and now click between Home and About. This is all pretty cool, but what did the Handlebars substitution really generate? There is nothing in the page source, but the Chrome inspector shows:
 
 ```html
@@ -373,7 +394,7 @@ Ember relies on strong naming conventions to tie all the pieces together. Follow
 
 If you look at `ember --help`, you will see entries like
 
-```
+```shell
 ember generate <blueprint> <options...>
   Generates new code from blueprints.
 ```
@@ -386,13 +407,15 @@ Blueprints are code snippets that define common Ember patterns.
 
 Components represent a small section of a page, have a template, and can have a model backed by the store. This is your classic `partial` and is frequently used with repeating elements on a page. If you had a blog, and that blog listed all posts in summary form, that page might contain something like
 
-```
+{% raw %}
+```html
 {{#each model as |post|}}
   {{#blog-post title=post.title}}
     {{post.body}}
   {{/blog-post}}
 {{/each}}
 ```
+{% endraw %}
 
 More on components [here](https://guides.emberjs.com/v2.4.0/components/defining-a-component/)
 
@@ -403,23 +426,18 @@ Controllers provide a lot of functionality, but the unique contributions are tha
 - provide state based on the current route
 - route user actions from a component to a route
 
-Although you can put some Component like behavior in a Controller, you should not. In the future, Components will subsume all Controller functionality and Controllers will go away. Using Controllers for only the above functionality will make that transition easier.
+Although you can put some Component-like behavior in a Controller, you should not. In the future, Components will subsume all Controller functionality and Controllers will go away. Using Controllers for only the above functionality will make that transition easier.
 
 In the About page example above, we used only a route that knew to render its template. If we have a page that the user can interact with, perhaps edit or toggle visibility, we need a controller. Let's see how that works.
 
 Following Zoltan's [example](http://yoember.com/), we can create a Jumbotron with a 
 
-## Routes
-
-## Models
-
-## DV vs PD
 
 ## Debugging
 
 If you open the Chrome Developer tools and take a look at the console, you will see something like:
 
-```
+```shell
 DEBUG: -------------------------------
 ember.debug.js:6394DEBUG: Ember      : 2.4.3
 ember.debug.js:6394DEBUG: Ember Data : 2.4.3
@@ -469,13 +487,7 @@ Collaborating remote teams have different cultures, different experiences, and d
 
 Larger companies frequently have more work than FTEs can complete and augment their staff with contractors. They slice off pieces of work to dish out to the contractors, the work is done, and the company meets their immediate goals. The pain comes when contractor work needs to be extended and maintained. FTEs with a decidedly different culture and approach must mine the code and wonder "What was that guy thinking?" That frustrating and slow maintenance is something an opinionated framework solves. Once you know that framework, you know the one way that things are done, and anyone should be able to walk into a project based on that framework and understand it.
 
-
 I have dealt with swiss army knife approaches and much prefer the pain of having to figure out the opinions of a framework once and applying them everywhere to having to understand all the features of a framework and having to figure out how each project decided to piece them together.
-
-## Release
-
-
-## Dockerizing
 
 
 ## Ember rules
@@ -485,4 +497,10 @@ Here are some rules to keep you on track
 - Every project is generated with `ember-cli`.
 - Every project file is generated with `ember-cli`. 
 - All additional functionality is provided by Ember add-ons and added with `ember-cli`. If you need functionality that is not provided in an add-on, consider writing your new functionality as an add-on and contribute back to the community. It shouldn't be much more work than adding that functionality in an ad-hoc way.
-- blueprints
+- Ember has a thriving community and bit-tons of contributed generators, add-ons, blueprints. Checkout what is available to further simplify your life.
+
+## Epilog
+
+By the time this post was committed, I have built a couple of small-scale Ember apps and my appreciation for the framework and community continues to grow. This is definately my go-to frontend framework for the foreseeable future.
+
+To get connected to the Ember community, join the slack channel, the IRC channel, discussion forum, etc. listed on the [community page](http://emberjs.com/community/).
