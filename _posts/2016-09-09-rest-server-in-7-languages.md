@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "ReST servers in 6 languages"
+title:  "ReST servers in 7 languages"
 date:   2016-09-09 19:32:15
-categories: rest golang gorilla groovy spark java springboot python falcon ruby sinatra node express
+categories: rest golang gorilla groovy spark java springboot python falcon ruby sinatra node express bash
 ---
 
 If you're in the cloud, you should be building [12-factor apps](https://12factor.net/). Emancipation from Enterprise IT frees you from monoliths and dogmatic language requirements. Then using microservices carves your solution into small, isolated chunks that encourage exploration.
@@ -26,6 +26,23 @@ So, if all language and frameworks are an option, how do you choose? The 12-fact
 Not a bad list of concerns, it omits things that most already do well ... but how do you eat that elephant?
 
 What if we just started with: _What does the simplest ReST server look like?_
+
+## Bash
+
+Server code
+
+```shell
+#!/bin/sh
+while true; do { echo -e 'HTTP/1.1 200 OK\r\n'; echo "Hello World"; } | nc -l -p 8080; done
+```
+
+Run Server
+
+```shell
+./bash-web-server.sh
+```
+
+Although this seems a bit silly, and is difficult to extend in a meaningful way, it is pretty cool to stick in an Alpine docker container for cluster deployment testing, etc. - it's only 4.81 MB.
 
 
 ## GO ([gorilla/mux](https://github.com/gorilla/mux))
@@ -86,11 +103,6 @@ groovy Server.groovy
 
 ## Java ([Spring Boot]())
 
-NOTES:
-
-* although the code is brief, there is significant build and configuration
-* you could use the spark framework here for a simpler implementation
-
 Server code
 
 ```java
@@ -134,6 +146,12 @@ Run server
 ```
 java -jar build/libs/gs-spring-boot-0.1.0.jar
 ```
+
+NOTES:
+
+* although the code is brief, there is significant build and configuration
+* you could use the spark framework here for a simpler implementation
+
 
 ## JavaScript ([Node/Express](http://expressjs.com/))
 
