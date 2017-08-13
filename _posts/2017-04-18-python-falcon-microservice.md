@@ -2,7 +2,7 @@
 layout: post
 title:  "A Python Falcon micro-service"
 date:   2017-04-18 12:23:26
-tags:   python falcon microservice
+tags:   python falcon kubernetes microservice
 
 ---
 
