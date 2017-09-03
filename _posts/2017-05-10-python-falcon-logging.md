@@ -44,11 +44,11 @@ All implementations start with a good logging library, and then add a little con
 
 We'll be developing this solution in the [ember-falcon-mongo](https://github.com/stevetarver/ember-falcon-mongo) repo. Using that repo's `pip` strategy, installation is straight-forward:
 
-* `requirements-pd.txt`: `structlog`
-* `requirements.txt`: `colorama`
+* `requirements.txt`: `structlog`
+* `requirements-dv.txt`: `colorama`
 * `constraints.txt`: `structlog==17.2.0`
 
-And then `pip install -r requirements.txt`.
+And then `pip install -r requirements-dv.txt`.
 
 ## Is logging with `structlog` different than with the stdlib?
 
@@ -102,10 +102,6 @@ That's all you need to know to get started. You can find all the gory details in
 
 ```python
 def initialize_logging() -> None:
-    """
-    Initialize the stdlib logging package for proper structlog operation.
-    This should be called once during application initialization.
-    """
     debug = os.environ.get('DEBUG', 'false') != 'false'
     logging.basicConfig(level='DEBUG' if debug else 'INFO',
                         stream=sys.stdout,
@@ -115,9 +111,8 @@ def initialize_logging() -> None:
 To configure `structlog` itself, we need two `structlog` configurations, one for developer use and a second for production logging. We will use production as the default and enable the developer presentation if `LOG_MODE=LOCAL`.
 
 ```python
-# To enable human readable, colored, positional logging, set LOG_MODE=LOCAL
-if os.getenv('LOG_MODE', 'JSON') == 'LOCAL':
-    PROCESSORS = [
+    if os.getenv('LOG_MODE', 'JSON') == 'LOCAL':
+        chain = [
             structlog.stdlib.add_log_level,
             structlog.stdlib.add_logger_name,
             structlog.stdlib.PositionalArgumentsFormatter(),
@@ -126,26 +121,25 @@ if os.getenv('LOG_MODE', 'JSON') == 'LOCAL':
             structlog.processors.format_exc_info,
             structlog.dev.ConsoleRenderer()
         ]
-# Otherwise, use JSON encoding for PD
-else:
-    PROCESSORS = [
-            add_app_info,
-            add_logger_name,
-            add_timestamp,
-            censor_password,
+    else:
+        chain = [
+            LogEntryProcessor.add_app_info,
+            LogEntryProcessor.add_logger_name,
+            LogEntryProcessor.add_timestamp,
+            LogEntryProcessor.censor_password,
             structlog.processors.StackInfoRenderer(),
             structlog.processors.format_exc_info,
-            cleanup_keynames,
+            LogEntryProcessor.cleanup_keynames,
             structlog.processors.JSONRenderer()
         ]
-    
-structlog.configure_once(
-    processors=PROCESSORS,
-    context_class=dict,
-    logger_factory=structlog.stdlib.LoggerFactory(),
-    wrapper_class=structlog.stdlib.BoundLogger,
-    cache_logger_on_first_use=True,
-)
+
+    structlog.configure_once(
+        processors=chain,
+        context_class=dict,
+        logger_factory=structlog.stdlib.LoggerFactory(),
+        wrapper_class=structlog.stdlib.BoundLogger,
+        cache_logger_on_first_use=True,
+    )
 ```
 
 This configuration highlights one of the great powers of `structlog`: the processor chain. When a log entry is created, it is passed through each processor in the processor chain. `structlog` provides a nice handful, but we can also easily add our own.
@@ -160,13 +154,18 @@ Notice that the developer view uses all `structlog` facilities and the `ConsoleR
 Each processor in the chain receives the wrapped logger object, the name of the method used to call the logger, and an event dictionary and returns the updated event dict. As an example, the `add_app_info` processor uses a file level `BuildInfo()` object (BI) to add application info to the log entry event_dict. 
 
 ```python
-def add_app_info(_, __, event_dict: dict) -> dict:
-    event_dict['logServiceType'] = BI.service_type
-    event_dict['logServiceName'] = BI.service_name
-    event_dict['logServiceVersion'] = BI.version
-    event_dict['logServiceInstance'] = HOST
-    event_dict['logThreadId'] = threading.current_thread().getName()
-    return event_dict
+    @staticmethod
+    def add_app_info(_, __, event_dict: dict) -> dict:
+        event_dict['logGitHubRepoName'] = LogEntryProcessor._BI.repo_name
+        event_dict['logServiceType'] = LogEntryProcessor._BI.service_type
+        event_dict['logServiceName'] = LogEntryProcessor._BI.service_name
+        event_dict['logServiceVersion'] = LogEntryProcessor._BI.version
+        event_dict['logServiceInstance'] = LogEntryProcessor._HOST
+        event_dict['logThreadId'] = threading.current_thread().getName()
+        if LogEntryProcessor.get_request_id():
+            # We are also used by the gunicorn logger so this may not be set
+            event_dict['logRequestId'] = LogEntryProcessor.get_request_id()
+        return event_dict
 ```
 
 This processor helps provide a standard operations plane within our log aggregator; each service presents semantically similar information under the same keys so the information is easy to find and aggregate amongst all services.
@@ -197,6 +196,8 @@ class LoggerMixin:
     def _warning(self, msg, *args, **kwargs) -> None:
         self._logger.warning(msg, *args, level="Warn", **kwargs)
 ```
+
+Note that I am renaming the log levels as well, to match existing SpringBoot services in my environment so that I can aggregate log entries over all services when searching in ELK.
 
 In the service code, every class will include the `LoggerMixin`:
 
@@ -240,52 +241,105 @@ This example shows logging the ingress and egress as well as avoiding logging no
 
 ```python
 class Telemetry(LoggerMixin):
-    """
-    see https://falcon.readthedocs.io/en/stable/api/middleware.html
-    """
     def __init__(self):
         super(Telemetry, self).__init__()
         self._excluded_resources = ('/liveness', '/readiness', '/ping')
 
     def process_request(self, req: falcon.Request, _: falcon.Response) -> None:
-        """
-        Process the request before routing it.
-        """
         if req.path not in self._excluded_resources:
-            # add a timestamp for call duration
-            req.context['telemetry_timestamp'] = datetime.now()
-            # TODO: how to log the body
+            req.context['received_at'] = datetime.now()
+            req.context['body_json'] = {}
+            if req.content_length:
+                req.context['body_json'] = json.load(req.bounded_stream)
             self._info("Request received",
                        logCategory='apiRequest',
                        reqReferrer=', '.join(req.access_route),
                        reqVerb=req.method,
                        reqPath=req.path,
                        reqQuery=req.query_string,
-                       reqBody='')
+                       reqBody=req.context['body_json'])
 
     def process_response(self, req: falcon.Request, resp: falcon.Response, _, __: bool) -> None:
-        """
-        Post-processing of the response (after routing)
-        :param req:
-        :param resp:
-        :param resource: Resource object to which the request was routed. May
-            be None if no route was found for the request.
-        :param req_succeeded: True if no exceptions were raised while the
-            framework processed and routed the request; otherwise False.
-        """
         if req.path not in self._excluded_resources:
             status = 0
             try:
                 status = int(resp.status[0:3])
-            except:
+            except:  # pylint: disable=bare-except
                 pass # intentionally ignore
 
-            duration = int((datetime.now() - req.context['telemetry_timestamp']).total_seconds() * 1000000)
+            duration = int((datetime.now() - req.context['received_at']).total_seconds() * 1000000)
             self._info("Request completed",
                        logCategory='apiResponse',
                        reqDurationMicros=duration,
                        reqStatusCode=status)
 ```                       
+
+There is a trick buried in here - logging the request payload. Falcon does not cache the payload on read; after you read the payload once, it is gone. The [doc](https://falcon.readthedocs.io/en/stable/api/request_and_response.html) explains
+
+> stream
+> 
+> File-like input object for reading the body of the request, if any. This object provides direct access to the server’s data stream and is non-seekable. In order to avoid unintended side effects, and to provide maximum flexibility to the application, Falcon itself does not buffer or spool the data in any way.
+
+What? I could find no other clarification for this design decision. One could guess this omission is for applications that receive large payloads to avoid memory bloat; those apps may prefer to operate on streams or write it to file. This seems pretty weak, there are a few obvious work-arounds to avoid the downsides.
+
+Anyway, we think it is critical to log the body on ingress so we can replicate failed calls while debugging. So, how do we read the body, log it, and yet still have it available to rest of the app?
+
+The Falcon Request object has a dict-like context, so we can cache the payload there ourselves and remember to get payloads from the context throughout the rest of our app:
+
+```python
+            req.context['body_json'] = {}
+            if req.content_length:
+                req.context['body_json'] = json.load(req.bounded_stream)
+```
+
+
+## `x-request-id`
+
+In ELK, we would like to view all log entries made during handling a single task. There is a convention for this; the `x-request-id` header. The concept is: when the frontend issues a request to the backend, it attaches an `x-request-id` header containing a `uuid4`. The backend attaches this value to each log entry. If the backend makes calls to other services, it includes the `x-request-id` header in the request and that service logs that value as well.
+
+When a customer files a ticket with typically vague information, we just have to find one log entry related to that request, identify the `x-request-id`, and search ELK for that. This produces an ordered list of every log entry made, by every service, when handling the request.
+
+Since we are running Falcon in request-per-thread mode, we can store the request_id in thread local storage and it will be available whenever we log. Python provides `threading.local()` specifically for this purpose. Since the `LogEntryProcessor` will use the request_id, it will own its storage:
+
+```python
+class LogEntryProcessor:
+
+    _TLS = threading.local()
+
+    @staticmethod
+    def get_request_id() -> str:
+        if hasattr(LogEntryProcessor._TLS, "request_id"):
+            return LogEntryProcessor._TLS.request_id
+        return None
+
+    @staticmethod
+    def set_request_id(request_id: str) -> None:
+        LogEntryProcessor._TLS.request_id = request_id
+```
+
+We can add another middleware to set and clean up the request_id:
+
+```python
+class RequestId:
+
+    def process_request(self, req: falcon.Request, _: falcon.Response) -> None:
+        LogEntryProcessor.set_request_id(req.get_header('x-request-id', default=str(uuid4())))
+
+    def process_response(self, _: falcon.Request, __: falcon.Response, ___, ____: bool) -> None:
+        LogEntryProcessor.set_request_id(None)
+```
+
+Note: If the client does not provide an `x-request-id`, perhaps a direct api call, we will generate one on request ingress.
+
+During application initialization, we'll make that the first middleware in the chain:
+
+```python
+def initialize() -> falcon.API:
+
+    api = falcon.API(media_type='application/vnd.api+json',
+                     middleware=[RequestId(), Telemetry()])
+```
+
 
 ## Dependency logging
 
@@ -303,7 +357,7 @@ class GunicornLogger(object):
     to provide structlog logging in gunicorn
 
     Add the following to gunicorn start command to use this class
-        --logger-class src.common.logging.GunicornLogger
+        --logger-class app.common.logging.GunicornLogger
     """
     def __init__(self, cfg):
         initialize_logging()
@@ -341,7 +395,7 @@ class GunicornLogger(object):
         pass # we don't support files
 ``` 
 
-There are two tricks in this implementation. Both require us to recognize that Gunicorn is our service's parent; it will not inherit any of our logging configuration. We must `initialize_logging()` in this class. Also, because our `structlog` configuration is at the file level, not enclosed in a method, Gunicorn will execute that configuration when it loads `GunicornLogger`. 
+There are two tricks in this implementation. Both require us to recognize that Gunicorn is our service's parent; it will not inherit any of our logging configuration. We must `initialize_logging()` in this class. 
 
 Most of the class is a proxy for `structlog` with two simplifications. 12-factor apps don't do files, so I can provide a `pass` implementation for those. Also, I know that I will not care about access logs - Falcon provides all the information I need to know about request origin. I can provide a `pass` implementation for `access()` as well.
 
@@ -351,7 +405,7 @@ To have Gunicorn use this class for logging, include it in your start command:
 PYTHONPATH=$PYTHONPATH:. \
 MONGO_URI='mongodb://localhost:27017/' \
 gunicorn \
-    --logger-class src.common.logging.GunicornLogger \
+    --logger-class app.common.logging.GunicornLogger \
     'src.app:run()'
 ```
 
