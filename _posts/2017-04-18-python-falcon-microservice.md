@@ -8,7 +8,7 @@ tags:   python falcon kubernetes microservice
 
 **TL;DR** A simple Python micro-service on Falcon
 
-<img style="float: left;" src="/images/python.jpeg">
+<img style="float: left;" src="/images/logo/python.jpeg">
 
 I want to be able to compare and contrast micro-services built in java, golang, nodejs, and python. I have a lot of time in SpringBoot, written some in golang, a couple more in nodejs, but nothing in modern Python. Seems like this is a good weekend for playtime in Python land.
 

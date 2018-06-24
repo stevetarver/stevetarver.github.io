@@ -9,9 +9,9 @@ tags: ember strongloop percona mysql fullstack javascript
 **TL;DR** A fullstack implementation in a single repo using Ember, StrongLoop, and Percona Server
 
 <table style="float: left; border: 0;">
-<tr><td style="border: 0;"><img height="60" width="100" src="/images/ember.png"></td></tr>
-<tr><td style="border: 0;"><img height="100" width="100" src="/images/strongloop.jpeg"></td></tr>
-<tr><td style="border: 0;"><img height="70" width="70" src="/images/percona_logo.png"></td></tr>
+<tr><td style="border: 0;"><img height="60" width="100" src="/images/logo/ember.png"></td></tr>
+<tr><td style="border: 0;"><img height="100" width="100" src="/images/logo/strongloop.jpeg"></td></tr>
+<tr><td style="border: 0;"><img height="70" width="70" src="/images/logo/percona_logo.png"></td></tr>
 </table>
 
 

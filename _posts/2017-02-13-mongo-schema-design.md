@@ -8,7 +8,7 @@ tags:   mongo nosql schema design
 
 **TL;DR** NoSQL schema design for common application access patterns
 
-<img style="float: left;" src="/images/mongo.jpeg">
+<img style="float: left;" src="/images/logo/mongo.jpeg">
 
 I loved the Mongo University's M101 course I took a couple of years ago. They have added many courses that look interesting, DBA, clustering, security, etc., so I am taking M101 again as a refresher. Week 4 focuses on application access pattern based schema design. It is such a good overview that I wanted to have those ideas handy - these are notes from that week.
 

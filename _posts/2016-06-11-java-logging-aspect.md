@@ -8,7 +8,7 @@ tags: logging java spring logback
 
 **TL;DR** Implementation of a logback logging aspect for API metrics collection.
 
-<img style="float: left;" src="/images/java_logo.png">
+<img style="float: left;" src="/images/logo/java_logo.png">
 
 Every Enterprise IT migration from the traditional to the cloud is different and every corporation is at a different place in that path. What if you like the ideas in _Logging as a first class citizen_ and want to use the implementation and concepts in _A whole product concern logging implementation_? I gave a traditional deployment to tomcat solution and a cloudy Spring Boot solution, but what if you are somewhere in the middle?
 

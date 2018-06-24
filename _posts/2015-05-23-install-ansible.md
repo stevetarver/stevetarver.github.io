@@ -6,7 +6,7 @@ date:   2015-05-23 17:16:26
 tags: mac ansible cloud homebrew vagrant vm
 ---
 
-<img style="float: left;" src="/images/ansible_logo_black_square_small.png">
+<img style="float: left;" src="/images/logo/ansible_logo_black_square_small.png">
 
 
 Ansible is an automated configuration management tool that integrates well with Vagrant, CI systems, and can be used to manage your operating system, infrastructure, and your code.

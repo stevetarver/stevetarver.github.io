@@ -8,7 +8,7 @@ tags:   nexus docker docker-registry ci cd haproxy
 
 **TL;DR** Deploy Nexus in a Docker container and provide Docker Registry, Maven, NuGet, npm, ruby, etc., repos
 
-<img style="float: left;" height="50" width="283" src="/images/nexus.jpeg">
+<img style="float: left;" height="50" width="283" src="/images/logo/nexus.jpeg">
 
 I've been a fan of Nexus for a decade, since I converted our maven repo on an NFS share accessed via ssh to a 1.x hosted proxy. It was an easy 10x increase in build and deploy times - yes I timed it. Nexus 3 is a huge advance for cloud shops: adding Docker, npm, Ruby, Bower, PyPi, NuGet, and static site repos to the original maven repositories.
 

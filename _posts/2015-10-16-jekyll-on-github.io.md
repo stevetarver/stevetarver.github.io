@@ -7,7 +7,7 @@ tags: github pages jekyll static-site macdown
 
 **TL;DR**: Up and running with jekyll on github.io
 
-<img style="float: left;" src="/images/jekyll-github-logo.png">
+<img style="float: left;" src="/images/logo/jekyll-github-logo.png">
 
 Curiously, programmers repeat tedious processes until some level of pain or annoyance is met. They could fix the problem straight away, but they endure until it pisses them off sufficiently and they finally fix it. But, ... then again, maybe that's just me and my lazy system of prioritization or system of lazy prioritization.
 

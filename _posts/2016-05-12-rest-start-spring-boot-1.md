@@ -8,7 +8,7 @@ tags: rest spring-boot java lombok spock jdbc 12-factor
 
 **TL;DR** Spring Boot ReST service starter
 
-<img style="float: left;" src="/images/spring-boot-project-logo.png">
+<img style="float: left;" src="/images/logo/spring-boot-project-logo.png">
 
 I was stuck in Java 6 land for a REALLY long time. And then I carved out some time to learn CoffeeScript (thank you Jeremy). And then I carved out some time to learn Ruby (thank you Matz). And I remembered a love that had stagnated working in the Enterprise with Java: languages. I love figuring out the most elegant solutions to problems and REALLY love when I have no restrictions; not on language, not on framework.
 

@@ -7,7 +7,7 @@ tags:   jenkins docker ci cd haproxy
 
 **TL;DR** Deploy Jenkins in a Docker container and build docker images
 
-<img style="float: left; border:15px solid white;" width="180" height="250" src="/images/jenkins.png">
+<img style="float: left; border:15px solid white;" width="180" height="250" src="/images/logo/logo/jenkins.png">
 
 We're setting up a build pipeline that will include a Nexus Docker registry, a Jenkins build server, and then Kubernetes integration. The Jenkins facility is expected to pull from GitHub, build Docker images, push them to Nexus and insert them into various k8s clusters. This month will focus on simply setting up the Jenkins facility.
 

@@ -8,7 +8,7 @@ tags:   python pyenv virtualenv venv microservices
 
 **TL;DR** It's just `pyenv`
 
-<img style="float: left;" src="/images/python.jpeg">
+<img style="float: left;" src="/images/logo/python.jpeg">
 
 I work in a full-stack devops shop migrating a monolithic control portal to a Cloud Native Architecture. The most important thing in that shop is not the work we tackle today, but creating an amazing work place so that any work we may tackle can be fun. One of our core tenants is polyglot everything: we want to create developer joy by allowing developers to work in languages, environments, and datastores they love. Managing many technologies can be challenging, but arriving at that amazing workplace is well worth it.
 

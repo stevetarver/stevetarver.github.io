@@ -8,7 +8,7 @@ tags: logging java logback elk fluentd logstash kibana elasticsearch 12-factor p
 
 **TL;DR** An implementation of logging with whole product concern in Spring Boot and Logback.
 
-<img style="float: left;" src="/images/spring-boot-project-logo.png">
+<img style="float: left;" src="/images/logo/spring-boot-project-logo.png">
 
 
 Logging as a First Class Citizen describes what I think modern applications/services should be logging and why. Now, lets look at "how". I struggled with this for a while with Log4j, writing custom encoders to add kv pairs to log entries and aspects to extract API access event information - tedious and ugly. 

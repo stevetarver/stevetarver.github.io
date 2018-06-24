@@ -6,7 +6,7 @@ date:   2015-09-05
 tags: intellij mongo mongodb syntax highlighting
 ---
 
-<img style="float: left;" src="/images/intellij.png">
+<img style="float: left;" src="/images/logo/intellij.png">
 
 
 Much DBA work is done in scripts for testing in dev and promotion up the quality stack. How can we make that easier in Mongo?

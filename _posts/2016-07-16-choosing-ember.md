@@ -8,7 +8,7 @@ tags: ember javascript
 
 **TL;DR**: How I chose a UI framework and lessons learned from a first Ember.js 2.x app.
 
-<img style="float: left;" src="/images/ember.png">
+<img style="float: left;" src="/images/logo/ember.png">
 
 My UI is having growing pains. It has reached the point where the architecture is restraining us instead of serving us; it is slowly eroding our business agility and affecting UX.
 

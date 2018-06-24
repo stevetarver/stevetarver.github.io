@@ -8,7 +8,7 @@ tags:   logging python falcon kubernetes microservice
 
 **TL;DR** A python logging configuration for humans and computers
 
-<img style="float: left;" src="/images/python.jpeg">
+<img style="float: left;" src="/images/logo/python.jpeg">
 
 Structured logging encodes log entries as key-value pairs, frequently as JSON, and is essential for efficient log ingestion by aggregators like [ELK](https://www.elastic.co/webinars/introduction-elk-stack), [graylog](https://www.graylog.org/), and [Splunk](https://www.splunk.com/). Intentionally separating message from associated data allows you to efficiently find log entries by name, location, or any other data you expose; each key becomes a `group-by` target. It also clarifies the log message so you can quickly scan **what** was going on and then drill down into the data when needed. 
 

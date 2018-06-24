@@ -5,7 +5,7 @@ date:   2016-02-19 11:02:35
 tags: git scm
 ---
 
-<img style="float: left; width:180px;" src="/images/github-logo.jpg">
+<img style="float: left; width:180px;" src="/images/logo/github-logo.jpg">
 
 In git, commit messages divide people into two camps - Commit history:
 

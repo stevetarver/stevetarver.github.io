@@ -7,7 +7,7 @@ categories: openssl ca certificate jenkins nexus
 
 **TL;DR** A script to generate a self-signed CA and server certificates
 
-<img style="float: left;" src="/images/openssl.jpeg">
+<img style="float: left;" src="/images/logo/openssl.jpeg">
 
 I really like internal-only wildcard certs for the cloud; you have a fleet of servers visible only to your devops team and one certificate can provide secure communications to them all. Wildcard cert costs are trivial for corporations - about $200 for the last one I bought. 
 
