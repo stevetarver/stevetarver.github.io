@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Desigining CI-CD-CD pt 1: Terms & Concepts"
+title:  "Desigining CI-CD-CD Pt 1: Terms & Concepts"
 date:   2017-08-14 11:11:11
 tags:   ci cd build pipeline jenkins automation
 
