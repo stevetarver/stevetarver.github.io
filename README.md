@@ -2,7 +2,7 @@
 
 ## Resources
 
-- [Getting Started](https://help.github.com/articles/using-jekyll-with-pages/)
+- [Getting Started](https://help.github.com/articles/using-jekyll-as-a-static-site-generator-with-github-pages/)
 
 ## Project Setup
 

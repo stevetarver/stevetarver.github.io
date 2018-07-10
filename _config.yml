@@ -1,11 +1,11 @@
 # General Jekyll Config
-highlighter: rouge
-markdown: kramdown
-url: http://stevetarver.github.io
 lsi: false
+safe: true
+markdown: kramdown
+highlighter: rouge
+url: http://stevetarver.github.io
 exclude: [LICENSE, CNAME, README.md, .gitignore, Gemfile, Gemfile.lock]
 
 kramdown:
   input: GFM
-  syntax_highlighter: rouge
-  enable_coderay: true
+  highlighter: rouge
