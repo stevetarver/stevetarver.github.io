@@ -40,7 +40,7 @@ If you will use Minikube for more than following this article, I suggest install
 ᐅ minikube config set vm-driver hyperkit
 ```
 
-If you need more complete install instructions, you can find them in [Minikube README](https://github.com/kubernetes/minikube). The install transcript for Minikube, kubectl, and hyperkit looks like:
+If you need more complete install instructions, you can find them in the [Minikube README](https://github.com/kubernetes/minikube). The install transcript for Minikube, kubectl, and hyperkit looks like:
 
 ```
 ᐅ brew cask install minikube
@@ -101,7 +101,7 @@ Client Version: version.Info{Major:"1", Minor:"11", GitVersion:"v1.11.0", GitCom
 Server Version: version.Info{Major:"1", Minor:"10", GitVersion:"v1.10.0", GitCommit:"fc32d2f3698e36b93322a3465f63a14e9f0eaead", GitTreeState:"clean", BuildDate:"2018-03-26T16:44:10Z", GoVersion:"go1.9.3", Compiler:"gc", Platform:"linux/amd64"}
 ```
 
-Minikube can also be thought of as a Kubernetes version management system like `pyenv`, `sdkman` or `rbenv`. Each minikube will show you its supported versions:
+Voila! Instant Kubernetes cluster!. But Minikube is more; it can also be thought of as a Kubernetes version management system like `pyenv`, `sdkman` or `rbenv`. Each minikube will show you its supported versions:
 
 ```
 ᐅ minikube get-k8s-versions
@@ -109,6 +109,7 @@ The following Kubernetes versions are available when using the localkube bootstr
 	- v1.10.0
 	- v1.9.4
 	- v1.9.0
+# ...
 ```
 
 and you can start any of those versions with the start command:
@@ -120,10 +121,11 @@ and you can start any of those versions with the start command:
 
 ## Install Helm
 
-All of our k8s deploys use [Helm](https://github.com/kubernetes/helm) which has a command line client and a k8s deployed server. Now that your Minikube cluster is running and kubectl is pointing at it:
+We deploy all Kubernetes services with [Helm](https://github.com/kubernetes/helm) charts. Helm is implmented in two parts: a command line client and a Kubernetes deployed server component named Tiller. Helm uses your `~/.kube/config` to identify the target Kubernetes cluster to interact with. Now that your Minikube cluster is running and kubectl is pointing at it we can install both helm and tiller:
 
 ```
 ᐅ brew install kubernetes-helm
+# Install Tiller in the k8s cluster ~/.kube/config is pointing at
 ᐅ helm init
 ```
 
@@ -158,6 +160,7 @@ Please note: by default, Tiller is deployed with an insecure 'allow unauthentica
 For more information on securing your installation see: https://docs.helm.sh/using_helm/#securing-your-helm-installation
 Happy Helming!
 ```
+
 More install details can be found [here](https://github.com/kubernetes/helm).
 
 ## Create our own Helm Chart repo
@@ -172,7 +175,9 @@ After living with that decision, I am starting to see some benefit in having a d
 * easily make changes to all charts to accomodate infrastructure changes.
 * easily compare charts to ensure consistency and best practices are met.
 
-So, let's take a brief detour and [set up a dedicated helm repo](https://github.com/kubernetes/helm/blob/master/docs/chart_repository.md). A Helm Chart repository consists of chart tarballs, and `index.yaml`, and a http server that provides bundled charts to clients. Helm makes this easy in GitHub: you can store your charts in a repo, serve the charts through gh-pages, and connect the two with some automation.
+Perhaps a private Helm chart repo should be a standard feature.
+
+So, let's take a brief detour and [set up a dedicated helm repo](https://github.com/kubernetes/helm/blob/master/docs/chart_repository.md). A Helm Chart repository consists of chart tarballs, an `index.yaml`, and a http server that provides bundled charts to clients. Helm makes this easy in GitHub: you can store your charts in a repo, serve the charts through gh-pages, and connect the two with some automation.
 
 After creating the [charts](https://github.com/stevetarver/charts) repo, I seeded it with a directory structure like [kubernetes/charts](https://github.com/kubernetes/charts) and placed a Jenkins chart in `stable`.
 
@@ -219,13 +224,99 @@ Success means that Helm was able to load our `index.yaml` - looking good so far.
 
 **NOTE**: After each chart repo modification, we will have to let our local Helm know about those changes with: `helm repo update`.
 
+## Use a ServiceAccount from the command line, inside a pod
+
+Between this article's first draft and publication, I switched from an unsecured K8S 1.6 cluster to a secure 1.10 version. The first thing I learned is that minikube has a bug that prevents changing the API Server authorization mode through configuration - it is always `Node,RBAC`. This led to the second thing I learned: how to actually use a ServiceAccount from the command line. [Helm provides some good information](https://github.com/kubernetes/helm/blob/master/docs/rbac.md), as well as the official [jenkins helm chart](https://github.com/kubernetes/charts/tree/master/stable/jenkins) but I had a hard time pulling it all together - in hindsight, obvious, but up front, I spent some hours trying to wrap my head around RBAC so let's walk through that configuration.
+
+In this POC, Jenkins uses a helm client to talk to the tiller server deployed in `kube-system`. We have isolated Jenkins in a `dev` namespace; how do we connect all the pieces to let Jenkins shell out helm commands and actually talk to tiller? 
+
+There are three API resources involved: ServiceAccount, RoleBinding, and the Jenkins Deployment. The ServiceAccount must be defined for the Jenkins pod so we can easily mount the ServiceAccount token in the pod. This happens automatically when we include the ServiceAccount in our Jenkins chart.
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: \{{ .Values.rbac.serviceAccountName }}
+  labels:
+    app: {{ .Release.Name }}
+automountServiceAccountToken: true
+```
+
+Tiller needs to be able to get, create, and delete just about everything - very much like a `cluster-admin`. So much so, that we will create a RoleBinding to that existing role - `cluster-admin` is created in the `kube-system` namespace by default. 
+
+What type of binding? A RoleBinding which will be scoped to a single namespace, or a ClusterRoleBinding which can span namespaces. It is probable that some deployments will modify multiple namespaces, so ClusterRoleBinding.
+
+Next, where to deploy that role binding. Since the RoleBinding ties a Role to a ServiceAccount, both listed in the manifest, and we really only want Jenkins to use the Service account, it makes sense to deploy the RoleBinding to the `dev` namespace with our Jenkins helm chart as well.
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Values.rbac.serviceAccountName }}-cluster-role-binding
+  labels:
+    app: {{ .Release.Name }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Values.rbac.roleRef }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.rbac.serviceAccountName }}
+    namespace: {{ .Release.Namespace }}
+```
+
+For the last part of the chart modifications, we need to update the Jenkins deployment.yaml to identify the desired ServiceAccount. In the pod spec:
+
+```yaml
+      serviceAccountName: {{ .Values.rbac.serviceAccountName }}
+```
+
+Now, how to make the ServiceAccount available to the Jenkins pod helm client? Helm uses a kubectl configuration for identifying the Kubernetes cluster to talk to and user credentials. Because of the chart additions above, the tiller service account information will be mounted in the Jenkins pod at `/var/run/secrets/kubernetes.io/serviceaccount/`. 
+
+In the Jenkins docker image, there is a kube-config and a Jenkins startup script patch that does some initial setup. We start with a bare-bones kube.config:
+
+```
+---
+apiVersion: v1
+kind: Config
+clusters:
+- cluster:
+    certificate-authority: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    server: ~~K8S_API_SERVER~~
+  name: default
+contexts:
+- context:
+    cluster: default
+    user: jenkins
+  name: default
+current-context: default
+preferences: {}
+users:
+- name: jenkins
+  user:
+    token: ~~TILLER_SA_TOKEN~~
+```
+and during initial Jenkins startup, fill in the k8s api server from environment variables and the token from the mounted ServiceAccount in the Jenkins startup script patch:
+
+```
+sed -i "s/~~K8S_API_SERVER~~/https:\/\/${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT_HTTPS}/g" /etc/kubernetes/kube.config
+sed -i "s/~~TILLER_SA_TOKEN~~/$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)/" /etc/kubernetes/kube.config
+helm init
+```
+
 ## Deploy Jenkins
 
-At this point, we have Minikube, kubectl, and helm installed, and helm configured to pull from our custom repo. Now we need to configure k8s to support our opinionated Jenkins: label nodes and create namespaces.
+At this point, we have Minikube, kubectl, and helm installed, and helm configured to pull from our custom repo. Now we need to configure k8s to support our opinionated Jenkins pipeline: label nodes and create namespaces.
 
-We've found that having a dedicated Jenkins node (VM) makes life a lot simpler - you don't run into job aborts due to rescheduling and when you have to debug Jenkins, it is always at the same location. We identify the target node with a `node-type` label. Normal workloads are deployed to nodes with node-type = generic, and Jenkins deploys to nodes with node-type = dev. Let's setup that label now.
+We've found that having a dedicated Jenkins node (VM) makes life a lot simpler:
 
-We also separate workloads by namespace: `dev` for development chores, `chaos` for testing, demo, poc, etc. We can do this easily from the command line.
+* no Jenkins application reschedules resulting in false build failures or missed builds
+* you can scale the Jenkins node resources to accommodate build job growth without interfering with other services
+* when you have to debug Jenkins, it is always at the same location
+
+We identify the Jenkins target node with a `node-type` label. Normal workloads are deployed to nodes with `node-type = generic`, and Jenkins deploys to nodes with `node-type = dev`. 
+
+We also separate workloads by namespace: `dev` for development chores, `chaos` for mainline development, `pre-prod` for testing, and `prod` for production. We label nodes and create namespaces easily from the command line:
 
 ```
 kubectl create namespace chaos
@@ -235,9 +326,7 @@ kubectl create namespace prod
 kubectl label --overwrite nodes --all node-type=dev
 ```
 
-Why the node label? We want to ensure that Jenkins is deployed to a dedicated node so we can bump up resources on that single node to accommodate build job growth and avoid Jenkins pod reschedules that may result in failed/missed builds.
-
-Now we can deploy Jenkins:
+Now we can deploy Jenkins using our custom Helm chart repo:
 
 ```
 helm upgrade --install --wait                                       \
@@ -248,6 +337,7 @@ helm upgrade --install --wait                                       \
     jenkins-1                                                       \
     makara-stable/jenkins
 ```
+
 We can watch the deploy progress on the command line - when the pod switches to Running, tail the jenkins log for the first time admin password, then get the service url:
 
 ```
@@ -292,12 +382,12 @@ release "jenkins-1" deleted
 This pipline has hard-coded references to Jenkins configuration which must exist prior to the first build:
 
 * Credentials
-    * dockerhub-jenkins-account: permission to pull from private repos
-    * github-jenkins-account: permission to pull from private repos during build
-    * nexus-jenkins-account: permission to push/pull from our private Nexus
+    * `dockerhub-jenkins-account`: permission to pull from private repos
+    * `github-jenkins-account`: permission to pull from private repos during build
+    * `nexus-jenkins-account`: permission to push/pull from our private Nexus
 * Environment variables:
-    * TARGET_ENV: identifies what part of the pipeline to execute, target environment. One of `dev`, `pre-prod`, or `prod`.
-    * K8S_CLUSTER_TYPE: allows us to configure our projects to deploy to minikube, a standard k8s cluster, or something else.
+    * `TARGET_ENV`: identifies what part of the pipeline to execute, target environment. One of `dev`, `pre-prod`, or `prod`.
+    * `K8S_CLUSTER_TYPE`: allows us to configure our projects to deploy to minikube, a standard k8s cluster, or something else.
 
 Since the Docker and GitHub repos we'll be using are public, you can use your own creds for Docker/GitHub.
 
@@ -366,7 +456,7 @@ In the job configuration:
 
 After the repository scan, Jenkins should recognize the master branch - and start building it. You can switch to the console view and follow along.
 
-The `ms-ref-java-spring` Jenkinsfile `containerPipeline` call inspects global environment variable `TARGET_ENV` to determine which pipeline to run. In this case, it will execute the `dev` pipeline which includes build, test, package, archive, and integration-test stages for the master branch.
+The `ms-ref-java-spring` Jenkinsfile `containerPipeline()` call inspects global environment variable `TARGET_ENV` to determine which pipeline to run. In this case, it will execute the `dev` pipeline which includes build, test, package, archive, and integration-test stages for the master branch.
 
 ### Inspecting the deployed service
 
@@ -388,89 +478,6 @@ Then we can browse to:
 * health: `/healthz/liveness`
 * metrics: `/metrics`
 * spring: `/actuator`
-
-## Use a ServiceAccount from the command line, inside a pod
-
-Between this article's first draft and publication, I switched from an unsecured K8S 1.6 cluster to a secure 1.10 version. The first thing I learned is that minikube has a bug that prevents changing the API Server authorization mode through configuration - it is always `Node,RBAC`. This led to the second thing I learned: how to actually use a ServiceAccount from the command line. [Helm provides some good information](https://github.com/kubernetes/helm/blob/master/docs/rbac.md), as well as the official [jenkins helm chart](https://github.com/kubernetes/charts/tree/master/stable/jenkins) but I had a hard time pulling it all together - in hindsight, obvious, but up front, I spent some hours trying to wrap my head around RBAC.
-
-In this POC, Jenkins uses a helm client to talk to the tiller server deployed in `kube-system`. We have isolated Jenkins in a `dev` namespace; how do we connect all the pieces to let Jenkins shell out helm commands and actually talk to tiller? 
-
-There are three API resources involved: ServiceAccount, RoleBinding, and the Jenkins Deployment. The ServiceAccount must be defined for the Jenkins pod so we can easily mount the ServiceAccount token in the pod. This happens automatically when we include the ServiceAccount in our Jenkins chart.
-
-```yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ .Values.rbac.serviceAccountName }}
-  labels:
-    app: {{ .Release.Name }}
-automountServiceAccountToken: true
-```
-
-Tiller needs to be able to get, create, and delete just about everything - very much like a `cluster-admin`. So much so, that we will create a RoleBinding to that existing role - `cluster-admin` is created in the `kube-system` namespace by default. 
-
-What type of binding? A RoleBinding which will be scoped to a single namespace, or a ClusterRoleBinding which can span namespaces. It is probable that some deployments will modify multiple namespaces, so ClusterRoleBinding.
-
-Next, where to deploy that role binding. Since the RoleBinding ties a Role to a ServiceAccount, both listed in the manifest, and we really only want Jenkins to use the Service account, it makes sense to deploy the RoleBinding to the `dev` namespace as well.
-
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: {{ .Values.rbac.serviceAccountName }}-cluster-role-binding
-  labels:
-    app: {{ .Release.Name }}
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: {{ .Values.rbac.roleRef }}
-subjects:
-  - kind: ServiceAccount
-    name: {{ .Values.rbac.serviceAccountName }}
-    namespace: {{ .Release.Namespace }}
-```
-
-For the last part of the chart modifications, we need to update the Jenkins deployment.yaml to identify the desired ServiceAccount. In the pod spec:
-
-```yaml
-      serviceAccountName: {{ .Values.rbac.serviceAccountName }}
-```
-
-Now, how to make the ServiceAccount available to the Jenkins pod helm client? Helm uses a kubectl configuration for identifying the Kubernetes cluster to talk to and user credentials. Because of the chart additions above, the tiller service account information will be mounted in the Jenkins pod at `/var/run/secrets/kubernetes.io/serviceaccount/`. 
-
-In the Jenkins docker image, there is a kube-config and a Jenkins startup script patch that does some initial setup. We start with a bare-bones kube.config:
-
-```
----
-apiVersion: v1
-kind: Config
-clusters:
-- cluster:
-    certificate-authority: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-    server: ~~K8S_API_SERVER~~
-  name: default
-contexts:
-- context:
-    cluster: default
-    user: jenkins
-  name: default
-current-context: default
-preferences: {}
-users:
-- name: jenkins
-  user:
-    token: ~~TILLER_SA_TOKEN~~
-```
-and during initial Jenkins startup, fill in the k8s api server from environment variables and the token from the mounted ServiceAccount. This is done in a patch to the Jenkins startup script:
-
-```
-sed -i "s/~~K8S_API_SERVER~~/https:\/\/${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT_HTTPS}/g" /etc/kubernetes/kube.config
-sed -i "s/~~TILLER_SA_TOKEN~~/$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)/" /etc/kubernetes/kube.config
-helm init
-```
-
-Now, if we bash into the Jenkins pod, `helm ls` will produce a list instead of "unauthorized".
-
 
 ## Simulating a `pre-prod` deployment
 
@@ -533,9 +540,9 @@ In the job configuration:
         * "Branches to build" -> "Branch Specifier (blank for 'any')" -> release
 * Click the "Save" button
 
-Now, let's deploy to production. In the developer workflow, when the `candidate` branch is of sufficient quality, it is merged into the `release` branch. 
+Now, let's deploy to production. In the developer workflow, when the `candidate` branch is of sufficient quality, it is merged into the `release` branch - I'll do that now. 
 
-**NOTE** The `release` branch provides a Jenkins job source and quick access to the source used to create the docker image, but nothing is actually built from the code.
+**NOTE** The `release` branch provides a Jenkins job target and quick access to the source used to create the docker image, but nothing is actually built from the code in this branch.
 
 After `candidate` is merged into `release`, we can click the "Build Now" link. During the build, the prod part of the pipeline will initialize the build parameter configuration - a short cut for filling it in manually. After this build fails, a new link, "Build with Parameters" will show on the Build Job page - click that.
 
@@ -585,4 +592,6 @@ And list all contacts to prove the service is working by browsing to `http://192
 
 ## Epilog
 
-**UPDATE 10 JUL 2018** This solution was developed prior to any other Jenkins solution being sufficiently robust. I see that the official  [Jenkins chart](https://github.com/kubernetes/charts/tree/master/stable/jenkins) has become much more mature/robust. If I had to start over, I would use that as a base and augment it appropriately. Of course, I am pretty fed up with Jenkins at this point, so when I return to build pipelines, I will probably start with experiments in [Spinnaker](https://www.spinnaker.io/), [go CD](https://www.gocd.org/), and [Concourse CI](https://concourse-ci.org/).
+I have omitted the many Jenkins bugs, constant version and plugin instability, breaking features, etc., from these articles. Jenkins is really a bear to work with and I have added a lot of manual maintenance overhead to insulate developers from this. The whole tedious Jenkins upgrade process with creating matched plugin version lists, migrating the `jenkins_home` to not lose configuration and avoid corruption, etc. is purely prevention for problems we have seen. When I return to build pipelines, I will probably start with experiments in [Spinnaker](https://www.spinnaker.io/), [go CD](https://www.gocd.org/), and [Concourse CI](https://concourse-ci.org/) to try to find a solution to these problems.
+
+**UPDATE 10 JUL 2018** This solution was developed prior to any other Jenkins solution being sufficiently robust. I see that the official  [Jenkins chart](https://github.com/kubernetes/charts/tree/master/stable/jenkins) has become much more mature/robust. If I had to start over, I would use that as a base and augment it appropriately. 
