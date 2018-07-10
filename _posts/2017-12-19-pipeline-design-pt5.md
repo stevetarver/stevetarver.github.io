@@ -236,9 +236,9 @@ There are three API resources involved: ServiceAccount, RoleBinding, and the Jen
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: \{\{ .Values.rbac.serviceAccountName \}\}
+  name: {\{ .Values.rbac.serviceAccountName }}
   labels:
-    app: \{\{ .Release.Name \}\}
+    app: {\{ .Release.Name }}
 automountServiceAccountToken: true
 ```
 
@@ -252,23 +252,23 @@ Next, where to deploy that role binding. Since the RoleBinding ties a Role to a 
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  name: \{\{ .Values.rbac.serviceAccountName \}\}-cluster-role-binding
+  name: {\{ .Values.rbac.serviceAccountName }}
   labels:
-    app: \{\{ .Release.Name \}\}
+    app: {\{ .Release.Name }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: \{\{ .Values.rbac.roleRef \}\}
+  name: {\{ .Values.rbac.roleRef }}
 subjects:
   - kind: ServiceAccount
-    name: \{\{ .Values.rbac.serviceAccountName \}\}
-    namespace: \{\{ .Release.Namespace \}\}
+    name: {\{ .Values.rbac.serviceAccountName }}
+    namespace: {\{ .Release.Namespace }}
 ```
 
 For the last part of the chart modifications, we need to update the Jenkins deployment.yaml to identify the desired ServiceAccount. In the pod spec:
 
 ```yaml
-      serviceAccountName: \{\{ .Values.rbac.serviceAccountName \}\}
+      serviceAccountName: {\{ .Values.rbac.serviceAccountName }}
 ```
 
 Now, how to make the ServiceAccount available to the Jenkins pod helm client? Helm uses a kubectl configuration for identifying the Kubernetes cluster to talk to and user credentials. Because of the chart additions above, the tiller service account information will be mounted in the Jenkins pod at `/var/run/secrets/kubernetes.io/serviceaccount/`. 
