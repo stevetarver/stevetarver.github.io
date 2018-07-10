@@ -154,6 +154,8 @@ The `prod` environment pipeline provides the following stages:
 
 ## The Jenkins shared library implementation
 
+Source is available [here](https://github.com/stevetarver/jenkins-pipe).
+
 The entry point for our docker image producing pipeline is `var/containerPipeline.groovy`. It will identify its target environment and then validate the args the client has provided are appropriate and sufficient for that environment.
 
 ```groovy
