@@ -33,7 +33,7 @@ This prioritized list is a migration roadmap; roughly oriented from base feature
 
 ## Logging
 
-_**What:**_ A logging standard that each service implements.
+_**What:**_ A logging standard that each service implements.<br/>
 _**Reuse:**_ Logging standard, reference implementation, starter project that includes the reference implementation.
 
 Logging is the first item on the list because it provides the fundamental view of what is going on in your service and can aid developers in almost every other chore.
@@ -57,7 +57,7 @@ We have to log in JSON for the log aggregator, but these logs are impossible to 
 
 ## Health endpoints
 
-_**What:**_ A standard approach to service health endpoints.
+_**What:**_ A standard approach to service health endpoints.<br/>
 _**Reuse:**_ Templates for the health endpoint implementation.
 
 Health endpoints are second on the list because the form is so easy to implement and having a service endpoint facilitates the next item in the list.
@@ -89,7 +89,7 @@ The `/healthz/ping` endpoint should always return `200 OK`. This provides a very
 
 ## Smoke test
 
-_**What:**_ A black box test of major service functionality.
+_**What:**_ A black box test of major service functionality.<br/>
 _**Reuse:**_ The test runner and idiom for waiting for services to become available.
 
 A smoke test is item three on the list because we now have a service endpoint to test and the smoke test will be the initial integration test used in the deployment features up next.
@@ -117,7 +117,7 @@ Somewhere a little further down the road, you may consider having a central test
 
 ## Local cluster support
 
-_**What:**_ Simple tooling to locally build & run a docker image, start all components, and perform a local deploy.
+_**What:**_ Simple tooling to locally build & run a docker image, start all components, and perform a local deploy.<br/>
 _**Reuse:**_ Templates for `Dockerfile`, `docker-compose.yaml`, and Minikube deployment.
 
 Item four on the list is the ability to package and run your service which only starts to make sense when we can interact with it and we can automate that interaction. Local cluster support development is tightly coupled to, and will be co-developed with, the helm chart and the deployment process.
@@ -146,7 +146,7 @@ This is another example of a standard implementation, even if it is copied to ea
 
 ## Helm chart
 
-_**What:**_ Templatized Kubernetes manifests used to deploy to the cluster.
+_**What:**_ Templatized Kubernetes manifests used to deploy to the cluster.<br/>
 _**Reuse:**_ Standard form for Helm charts
 
 Now that we can produce a Docker image and have Minikube installed, we can start developing our approach to deploying services.
@@ -164,7 +164,7 @@ As you experiment with Helm and the Kubernetes manifests, you will develop strat
 
 ## Deployment pipeline
 
-_**What:**_ A method for building source code and deploying it to the cluster.
+_**What:**_ A method for building source code and deploying it to the cluster.<br/>
 _**Reuse:**_ Build and deploy infrastructure and a common pipeline.
 
 Now that we have Minikube and a helm chart, we can start developing the deployment pipeline.
@@ -199,7 +199,7 @@ When you reach suitable quality in Minikube, you can move your infrastructure to
 
 ## Facts & Secrets
 
-_**What:**_ A standard approach to providing facts & secrets to cluster services
+_**What:**_ A standard approach to providing facts & secrets to cluster services<br/>
 _**Reuse:**_ Facts & secrets infrastructure and standard use.
 
 Now that we can deploy the reference service to Minikube, and our cluster, we can start thinking about some standard way to provide facts and secrets to that service. This makes sense as step seven because the deployment pipeline is fresh in our minds and we may use that, and we may need secrets to connect to upstream partners.
@@ -230,7 +230,7 @@ Storing secrets in Jenkins is a simple start, but as service count grows, you wi
 
 ## Integration test
 
-_**What:**_ An exhaustive set of black-box service tests.
+_**What:**_ An exhaustive set of black-box service tests.<br/>
 _**Reuse:**_ Test running scripts, some test idioms.
 
 Now that we can easily include account names and passwords in our deploy, we can start adding functionality to the reference service and expand our lightweight smoke test into our comprehensive integration test.
@@ -245,7 +245,7 @@ I like Postman/newman for all black-box testing. This means you can clone your s
 
 ## Load test & resource tagging
 
-_**What:**_ Tooling to load test a service and produce Kubernetes manifest resource limits.
+_**What:**_ Tooling to load test a service and produce Kubernetes manifest resource limits.<br/>
 _**Reuse:**_ Strategy and load test scripts.
 
 Now that we have an integration test, we can apply it to our service and quantify how it does under load.
@@ -260,7 +260,7 @@ Beyond resource tagging, load tests can be used to discover memory leaks, race c
 
 ## Metrics
 
-_**What:**_ Export service metrics and provide a central facility to collect, query, and view them.
+_**What:**_ Export service metrics and provide a central facility to collect, query, and view them.<br/>
 _**Reuse:**_ Monitoring infrastructure, metrics configuration.
 
 At this point, we have covered enough operational concerns to run and manage a small scale cluster. Operations is still limited by metrics collected from logs and the dashboards you can create from them. Publishing well considered metrics and collecting them in a central facility will provide a much better view of the services in aggregate, as well as in isolation.
@@ -287,7 +287,7 @@ Once the monitoring system and its dashboards and alerting are in place, you hav
 
 ## Graceful shutdown
 
-_**What:**_ A system to ensure no message is dropped.
+_**What:**_ A system to ensure no message is dropped.<br/>
 _**Reuse:**_ Graceful shutdown idiom.
 
 Now that we have a small, fairly robust, cluster, we should turn our attention back to production resiliance and reliability - ensure that no important messages are dropped. A Kubernetes cluster is volatile; reschedules happen all the time. We need to ensure that a reschedule does not abandon client requests.
@@ -300,7 +300,7 @@ But what about asynchronous services and those that fetch work from a messaging 
 
 ## Open tracing
 
-_**What:**_ A system to record service communications.
+_**What:**_ A system to record service communications.<br/>
 _**Reuse:**_ The infrastructure and idioms.
 
 At this point, our cluster is growing and understanding how services interact with each other is becoming a larger concern. Perhaps a request timed out but you don't know who in the service chain is at fault. Perhaps you don't understand which service is creating load for other services. This operational view of service interactions can drammatically reduce issue remediation times and is worth the effort before, or when, you start to feel these growing pains.
@@ -311,7 +311,7 @@ By simply installing the agent in your service, you will be able to show service
 
 ## Service mesh
 
-_**What:**_ A system for programmatically controlling network traffic.
+_**What:**_ A system for programmatically controlling network traffic.<br/>
 _**Reuse:**_ Infrastructure and helm chart templates.
 
 At this point, you have a robust cluster and understanding service interactions has become critical. You also want uniform implementation of distributed idioms like circuit breaker, retry budgets, and more control over request routing to provide for canary deploys, A/B testing, etc.
