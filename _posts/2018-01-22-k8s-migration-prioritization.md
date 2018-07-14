@@ -127,8 +127,8 @@ Here is a prioritized list:
 * **Logging**: a standard, and a boilerplate implementation. How else will you debug services you deploy?
 * **Build & deploy pipeline**: a way to easily move workloads into your clusters.
 * **Ingress**: a way to communicate with services in your cluster
-* **Monitoring**: services export metrics which consumed by an central facility
 * **Durable logging**: logs are forwarded to a central facility, dashboards are created
+* **Monitoring**: services export metrics which consumed by an central facility
 * **Monitoring dashboards**: dashboards are created on top of service and cluster metrics to highlight problems
 * **Alerting**: alerts are sent to appropriate systems to indicate service/cluster faults
 * **Service resiliency**: revisit service configuration for resource use, auto-scaling, ensure no dropped requests
@@ -180,6 +180,14 @@ Let's talk ReST URIs at a high level for a minute. As you add to your ReST servi
 
 That scheme lays the groundwork for service operator access. If you adopt functional URI elements then you can put liveness probes, metrics, etc., outside that scheme and restrict access appropriately. E.g. `/healthz`, `/metrics`.
 
+### Durable logging
+
+The first stage of logging was to simply standardize and log to stdout. Durable logging sends log records to an aggregator: a managed service like [logly](https://www.loggly.com/) or [Splunk](https://www.splunk.com/), an existing aggregator, or a new dedicated facility like [graylog](https://www.graylog.org/) or [Elastic Stack](https://www.elastic.co/products). 
+
+Each of these facilities provide robust search through all log records and durability beyond what a reschedulable microservice can promise. With this facility, you can effectively remediate issues, compare successful to unsuccessful requests, create dashboards to start understanding request load and how call duration varies with load, etc.
+
+This milestone is the first point you should consider letting other services into the cluster. Operational chores are still a bit rough, but you can manage if the load is low and the pressure high.
+
 ### Monitoring
 
 Logging is about narrative and best suited to remediating individual issues. Monitoring is about numbers and best suited to understanding individual services or cluster level performance. While some metrics can be accumulated and dashboarded in logging systems, when you move into reschedulable microservices, you need a deeper view of individual pod performance.
@@ -191,14 +199,6 @@ The first step is to export metrics from your reference application. Each monito
 If using Prometheus, the second step is to deploy the metrics collection facility. You should start small, with a simple helm chart deployment, that simply collects and durably stores the metrics. This will provide a base to experiment with; dashboarding and alerting are built in, but significant enough effort to warrant their own steps. It also provides a great set of Kubernetes cluster dashboards allowing you to monitor and identify problems with the cluster. You should allocate some time to understand the dashboards and reported metrics. Until we did this, we had no idea that one service was rescheduled hundreds of times a day.
 
 When creating this deployment, ensure that it is easily extensible. You will likely have a few Prometheus deployments, that may foll up to a federated server.
-
-### Durable logging
-
-The first stage of logging was to simply standardize and log to stdout. Durable logging sends log records to an aggregator: a managed service like [logly](https://www.loggly.com/) or [Splunk](https://www.splunk.com/), an existing aggregator, or a new dedicated facility like [graylog](https://www.graylog.org/) or [Elastic Stack](https://www.elastic.co/products). 
-
-Each of these facilities provide robust search through all log records and durability beyond what a reschedulable microservice can promise. With this facility, you can effectively remediate issues, compare successful to unsuccessful requests, create dashboards to start understanding request load and how call duration varies with load, etc.
-
-This milestone is the first point you should consider letting other services into the cluster. Operational chores are still a bit rough, but you can manage if the load is low and the pressure high.
 
 ### Monitoring dashboards
 
