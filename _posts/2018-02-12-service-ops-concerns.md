@@ -17,19 +17,19 @@ The operational piece of this equation is part cluster management, part service 
 
 This prioritized list is a migration roadmap; roughly oriented from base features to those needed for scale, while accommodating interdependencies. At some point, you want all services to somehow inherit all of this functionality - perhaps through a boilerplate starter app. How do you get to that point? One strategy is to create a reference app that implements each feature with the intent of producing some piece of shared code or template that can be rolled out for wider use.
 
-1. [ ] Logging
-1. [ ] Health endpoints
-1. [ ] Smoke test
-1. [ ] Local cluster support
-1. [ ] Helm chart
-1. [ ] Deployment pipeline
-1. [ ] Facts & Secrets
-1. [ ] Integration tests
-1. [ ] Load test & Resource tagging
-1. [ ] Metrics
-1. [ ] Graceful shutdown
-1. [ ] Open tracing
-1. [ ] Service mesh
+1. Logging
+1. Health endpoints
+1. Smoke test
+1. Local cluster support
+1. Helm chart
+1. Deployment pipeline
+1. Facts & Secrets
+1. Integration tests
+1. Load test & Resource tagging
+1. Metrics
+1. Graceful shutdown
+1. Open tracing
+1. Service mesh
 
 ## Logging
 
