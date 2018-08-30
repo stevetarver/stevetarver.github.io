@@ -9,7 +9,7 @@ tags:   k8s kubernetes
 
 <img style="float: left;" src="/images/logo/k8s.png">
 
-Last January, my partner and I stood up a new Kubernetes 1.4 for a new workgroup. There have been several iterations as we struggled with how to translate Enterprise IT concepts into a Cloud environment. Beyond the challenges of having multiple production levels and 17 productions data centers that span the globe, our biggest challenge was educating staff and motivating them for the move: adopting the changing toolset and changing processes. We learned that one of the key challenges was accurately estimating the staff's maximum rate of change - how much change they could accomodate without rebellion.
+Last January, my partner and I stood up a shiny new Kubernetes 1.4 for a new workgroup. There have been several iterations as we struggled with how to translate Enterprise IT concepts into a Cloud environment. Beyond the challenges of having multiple production levels and 17 productions data centers that span the globe, our biggest challenge was educating staff and motivating them for the move: adopting the changing toolset and changing processes. We learned that one of the key challenges was accurately estimating the staff's maximum rate of change - how much change they could accomodate without rebellion.
 
 Here are some thoughts about this process in the hopes that it can ease your journey.
 
