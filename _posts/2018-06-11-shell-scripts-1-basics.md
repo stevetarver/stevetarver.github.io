@@ -94,7 +94,7 @@ To become a rock-solid script developer, we'll adopt the following strategy:
 
 Our first "single pattern" is the shell template itself - one template that I copy and paste to create each new script:
 
-```shell
+```bash
 #!/bin/sh -e
 #
 # This line tells what I do
@@ -158,7 +158,7 @@ I always wrap variables with `${ }`. `${VAR}` returns the value of a variable, e
 
 The parens in the fragment below scope the directory change to only commands in the block - it creates a sub-shell. This adds a lot of clarity to the intended scope of the directory change, preserves the `pwd` the script was called from, and avoids a variety of maintenance injection errors.
 
-```
+```bash
 (
    cd ${THIS_SCRIPT_DIR}
    # Do stuff in the dir the script lives in without changing pwd
@@ -176,7 +176,7 @@ We expect the project build scripts to clean up after themselves, and we know th
 
 The solution: turn off error checking for only the commands that can generate errors we don't care about.
 
-```
+```bash
 # Intentionally disable error checking
 set +e
 docker rm -fv ${CONTAINER_NAME}
@@ -190,7 +190,7 @@ Software requirements met, but we can do better.
 
 Below, we check if there are any containers related to this image, and then tell the user if we are, or are not removing any.
 
-```
+```bash
 # Does the container exist?
 CONTAINERS=$(docker ps -a -f "ancestor=${IMAGE_NAME}" | grep "${CONTAINER_NAME}" | cut -f1 -d' ')
 
@@ -248,7 +248,7 @@ Let's take a look at implementations of each, in order.
 
 We'll use a test script that simply exits with the code we provide: [`return_exit_code.sh`](https://github.com/stevetarver/shell-scripts/blob/master/examples/return_exit_code.sh). Because the script we call returns different error codes for different types of errors, we can separate errors we can tolerate from those we cannot.
 
-```
+```bash
 THIS_SCRIPT_DIR=$(dirname $(readlink -f "${0}"))
 (
     cd ${THIS_SCRIPT_DIR}
@@ -309,7 +309,7 @@ Or they can send `stdout` to a `output.txt` and `stderr` to `errors.txt`:
 
 Next up is a script that sends everything to `stdout`. Let's look at the parts of the script that change:
 
-```
+```bash
     # ...
     echo "Calling: ./return_exit_code.sh ${INTERNAL_CODE}"
     # ...
@@ -345,7 +345,7 @@ This facility is rarely suitable for more than local debugging; `set -x` prints 
 
 Let's take it for a spin using [`./examples/return_exit_code.sh`](https://github.com/stevetarver/shell-scripts/blob/master/examples/return_exit_code.sh). This script takes an exit code as an argument and, optionally, lets you specify `set` args:
 
-```
+```bash
 THIS_SCRIPT_DIR=$(dirname $(readlink -f "${0}"))
 (
     # Set default values
@@ -358,7 +358,7 @@ THIS_SCRIPT_DIR=$(dirname $(readlink -f "${0}"))
 
 It is pretty easy to match up script commands and args with command logging:
 
-```
+```bash
 # ./return_exit_code.sh 2 -ex
 + readlink -f ./return_exit_code.sh
 + dirname /tmp/examples/return_exit_code.sh
@@ -375,7 +375,7 @@ Wanna debug some of my code? Follow along with the [`./examples/set_x.sh` script
 
 I wrote a little script that simply prints the first argument if provided, does nothing if that first arg is missing or is the empty string:
 
-```
+```bash
 if [ -n ${1} ]; then
     echo ${1}
 fi
@@ -384,7 +384,7 @@ Take a minute - do you see any bugs? Any suspect code?
 
 This works as expected:
 
-```
+```bash
 # ./set_x.sh hello
 hello
 ```
@@ -394,14 +394,12 @@ But, if I call it with no args or an empty string, it prints a newline - I don't
 # ./set_x.sh
 
 # ./set_x.sh ''
-
 ```
 
 And, if I try to print a command flag, it just prints a newline:
 
 ```
 # ./set_x.sh -e
-
 ```
 Let's focus on the last call and wrap the code with `set -x` and `set +x`:
 
@@ -416,14 +414,14 @@ We can see that `test` is identifying a string of non-zero length, and that `ech
 
 If I look closely, I notice that I did not wrap the `test` variable in double quotes and I am using a string test. Given that, and our new knowledge of `echo`, I can improve the script by replacing it with:
 
-```
+```bash
 if [ -n "${1}" ]; then
     printf "%s\\n" "${1}"
 fi
 ```
 OK, nice trivial example. But what would I do if I have a script that calls another script, that calls another script and there is a problem in calling conventions between the scripts? One strategy is to conditionally enable command logging in each script based on an environment variable:
 
-```
+```bash
 [ -n "${DEBUG}" ] && set -x
 
 # suspect code is here
@@ -458,9 +456,11 @@ The interesting options are:
             before it is executed. Useful for debugging.
 ```
 
+**TODO** test and doc -u	Treat unset variables as an error when substituting.
+
 Let's try them out on an obviously flawed script: [`bad_syntax.sh`](https://github.com/stevetarver/shell-scripts/blob/master/examples/bad_syntax.sh):
 
-```
+```bash
 22 THIS_SCRIPT_DIR=$(dirname $(readlink -f "${0}"))
 23 (
 24    # Not directory dependent
@@ -497,7 +497,7 @@ This can add a little value - it lists all commands that executed successfully, 
 
 And finally, verbose:
 
-```
+```bash
 # sh -v bad_syntax.sh
 # ... file header comments omitted for clarity/brevity.
 THIS_SCRIPT_DIR=$(dirname $(readlink -f "${0}"))
@@ -512,6 +512,13 @@ bad_syntax.sh: line 28: syntax error: unexpected "else" (expecting "then")
 
 This is another interesting view: it shows every line executed successfully until the problem commands. You can readily see from the output that the `test` block is missing a command terminator `;` and there is no space between `]` and `then`.
 
+The Bourne shell does a good job of identifying error location, until you source a script. Then line numbers reflect the merged script: all sourced scripts inserted at the source command line. You can make short work of finding the error location with the `-v` option with both stdout and stderr redirected to file:
+
+```bash
+sh -v ./script.sh &>out.txt
+```
+
+If you `vi` `out.txt`, and `<line num> gg>`, you can get right to that problem area.
 
 
 ## Tips
@@ -520,7 +527,7 @@ This is another interesting view: it shows every line executed successfully unti
 
 Many use `echo` to print output consumed by other commands or pipe variables to other commands. This is fine until an argument starts with `\` or you have a newline sensitive command. Across Unix, POSIX, and various shells, echo has inconsistent and/or unspecified behavior. This is what happens in Alpine `sh`:
 
-```
+```bash
 # echo "-e"
 
 # echo "\\n"
