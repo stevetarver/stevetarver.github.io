@@ -5,7 +5,6 @@ date:   2018-07-13 11:11:11
 tags:   bourne sh ash alpine linux
 ---
 
-**TODO** - fix this tag line
 **OR...** _on writing a clear, consistent and simple script utiltiy._
 
 <img style="float: left; margin: 10px 30px 20px 0px;" src="/images/logo/sh.png">
