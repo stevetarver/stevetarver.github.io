@@ -573,4 +573,4 @@ It is very clear that the second example includes a newline, and the display doe
 
 ## Epilog
 
-That is a pretty solid base for writing simple command scripts. Stay tuned for part two where we look at more robust utility scripts including arg parsing, control flows, functions, and colored printing - managing complexity and creating a great UX.
+That is a pretty solid base for writing simple command scripts. Stay tuned for part two where we look at more robust utility scripts including arg parsing, validation, and colored printing - managing complexity and creating a great UX.
